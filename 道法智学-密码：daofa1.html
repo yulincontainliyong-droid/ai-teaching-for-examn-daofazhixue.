@@ -1,0 +1,2869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>道法智学 Pro | 希沃教室版</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4338ca;
+            --primary-light: #6366f1;
+            --primary-bg: #e0e7ff;
+            --secondary: #ec4899;
+            --accent: #8b5cf6;
+            --success: #059669;
+            --error: #dc2626;
+            --warning: #d97706;
+            --surface: rgba(255, 255, 255, 0.85);
+            --surface-glass: rgba(255, 255, 255, 0.6);
+            --bg-gradient: radial-gradient(circle at top left, #f0f9ff, #e0e7ff, #f3e8ff);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.8);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 32px;
+            --highlight-bg: rgba(255, 255, 0, 0.4);
+        }
+
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --primary-light: #6366f1;
+            --primary-bg: rgba(99, 102, 241, 0.2);
+            --surface: rgba(30, 41, 59, 0.9);
+            --surface-glass: rgba(15, 23, 42, 0.8);
+            --bg-gradient: radial-gradient(circle at top left, #0f172a, #1e1b4b);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.4);
+            --highlight-bg: rgba(255, 215, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* --- Seewo Presentation Mode (Classroom Optimization) --- */
+        body.seewo-mode {
+            font-size: 24px;
+            /* Larger base font */
+        }
+
+        body.seewo-mode .btn-primary,
+        body.seewo-mode .btn-secondary,
+        body.seewo-mode .star-filter-btn {
+            padding: 1.2rem 2.4rem;
+            /* Larger touch targets */
+            font-size: 1.2rem;
+        }
+
+        body.seewo-mode .question-text {
+            font-size: 2rem;
+            line-height: 1.8;
+        }
+
+        body.seewo-mode .app-container {
+            max-width: 98%;
+            /* Use more screen real estate */
+            padding: 10px;
+        }
+
+        body.seewo-mode .glass {
+            backdrop-filter: none;
+            /* Performance boost for older OPS */
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* --- Animations --- */
+        .glass {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .brand i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tag-badge {
+            font-size: 0.7rem;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-left: 10px;
+            vertical-align: middle;
+            text-transform: uppercase;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(236, 72, 153, 0.4);
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .icon-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: rotate(15deg);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            border-color: transparent;
+        }
+
+        /* View Transitions */
+        .view {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .view.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Dashboard */
+        .welcome-section {
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+        }
+
+        .welcome-title {
+            font-size: 3rem;
+            margin: 0 0 16px 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            font-feature-settings: "tnum";
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Search */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            z-index: 10;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 20px 30px;
+            padding-right: 70px;
+            border-radius: 50px;
+            border: 2px solid transparent;
+            background: var(--surface);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.15);
+            transform: scale(1.02);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.4rem;
+            pointer-events: none;
+        }
+
+        /* Search Results */
+        .result-item {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .result-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20px;
+            bottom: 20px;
+            width: 4px;
+            background: var(--primary);
+            border-radius: 0 4px 4px 0;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .result-item:hover {
+            transform: translateX(5px);
+            background: var(--primary-bg);
+            border-color: var(--primary);
+        }
+
+        .result-item:hover::before {
+            opacity: 1;
+        }
+
+        .result-match {
+            background: var(--highlight-bg);
+            color: inherit;
+            padding: 0 2px;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result-item {
+            animation: fadeInScale 0.3s ease forwards;
+        }
+
+        /* Grid Cards */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(255, 255, 255, 0);
+            z-index: 1;
+        }
+
+        /* Card Gradients */
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            line-height: 1.3;
+            color: var(--text-main);
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .card-icon-bg {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 8rem;
+            opacity: 0.05;
+            transform: rotate(-15deg);
+            transition: transform 0.4s;
+        }
+
+        .card:hover .card-icon-bg {
+            transform: rotate(0deg) scale(1.1);
+            opacity: 0.1;
+        }
+
+        /* Quiz UI */
+        .quiz-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-track {
+            height: 16px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            margin-bottom: 50px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .question-box {
+            background: var(--surface);
+            padding: 50px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .question-badge {
+            display: inline-block;
+            background: var(--primary-bg);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 24px;
+        }
+
+        .question-text {
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            color: var(--text-main);
+        }
+
+        .option-item {
+            padding: 24px 32px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-size: 1.4rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .option-item:hover {
+            border-color: var(--primary);
+            background: var(--primary-bg);
+            transform: translateX(10px);
+        }
+
+        .option-item.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .option-item.correct .opt-letter {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .option-item.wrong {
+            border-color: var(--error);
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .option-item.wrong .opt-letter {
+            background: var(--error);
+            color: white;
+            border-color: var(--error);
+        }
+
+        .opt-letter {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover .opt-letter {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Feedback Panel */
+        .feedback-panel {
+            margin-top: 40px;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            background: #eff6ff;
+            border-left: 8px solid var(--primary);
+            animation: slideUp 0.4s ease;
+            display: none;
+        }
+
+        .feedback-panel.correct {
+            background: #f0fdf4;
+            border-left-color: var(--success);
+        }
+
+        .feedback-panel.wrong {
+            background: #fef2f2;
+            border-left-color: var(--error);
+        }
+
+        .feedback-panel.material {
+            background: var(--surface);
+            border-left-color: var(--primary);
+        }
+
+        .feedback-title {
+            font-weight: 800;
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .source-box {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 24px;
+            border: 1px dashed var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* Material Section */
+        #material-section {
+            margin-top: 40px;
+            padding: 32px;
+            background: #fffbeb;
+            border-radius: var(--radius-lg);
+            border: 2px solid #fcd34d;
+            color: #92400e;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Buttons */
+        .btn-primary,
+        .btn-secondary {
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Result View */
+        .result-container {
+            text-align: center;
+            padding: 30px;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .stat-bars-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .stat-bar {
+            background: var(--surface);
+            padding: 15px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .stat-bar-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-bar-value {
+            font-size: 1.5rem;
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Peek Button & Content */
+        .peek-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .peek-btn:hover {
+            transform: scale(1.1);
+            border-color: var(--primary);
+        }
+
+        .peek-content {
+            background: #fef3c7;
+            border: 1px dashed #f59e0b;
+            color: #92400e;
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            display: none;
+            /* Hidden by default */
+            font-size: 1.1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Confetti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+
+        /* Star Rating */
+        .star-rating {
+            color: #fbbf24;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .star-rating .far {
+            color: #cbd5e1;
+        }
+
+        /* Admin Panel */
+        .admin-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .admin-list-item:hover {
+            background: var(--primary-bg);
+        }
+
+        /* Dictation Mode */
+        .dictation-area {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+        }
+
+        .dictation-input {
+            width: 100%;
+            height: 150px;
+            padding: 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 1.2rem;
+            margin: 20px 0;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .dictation-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .star-filter-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            cursor: pointer;
+            background: var(--surface);
+        }
+
+        .star-filter-btn.active {
+            border-color: var(--primary);
+            background: var(--primary-bg);
+            color: var(--primary);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+        }
+
+        /* Diff Highlight */
+        .diff-match {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* Summary List in Result View */
+        .summary-list {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .summary-item {
+            background: var(--surface);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .summary-question {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        /* Peek Answer Button */
+        .peek-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            padding: 8px;
+            transition: all 0.2s;
+        }
+
+        .peek-btn:hover {
+            color: var(--primary);
+        }
+
+        .peek-content {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fffbeb;
+            border-radius: var(--radius-md);
+            border: 1px dashed #fcd34d;
+            color: #92400e;
+            font-size: 1.1rem;
+            display: none;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (min-width: 1600px) {
+            :root {
+                --radius-md: 16px;
+                --radius-lg: 24px;
+                --radius-xl: 40px;
+            }
+
+            body {
+                font-size: 18px;
+            }
+
+            .app-container {
+                max-width: 1600px;
+            }
+
+            .question-text {
+                font-size: 2.4rem;
+            }
+
+            .option-item {
+                font-size: 1.6rem;
+            }
+
+            .welcome-title {
+                font-size: 4rem;
+            }
+
+            .stat-number {
+                font-size: 4rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 16px;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .question-text {
+                font-size: 1.4rem;
+                padding: 0;
+            }
+
+            .question-box {
+                padding: 24px;
+            }
+
+            .option-item {
+                padding: 16px;
+                font-size: 1.1rem;
+            }
+
+            .opt-letter {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .brand span {
+                font-size: 1.2rem;
+            }
+
+            .tag-badge {
+                display: none;
+            }
+
+            .score-circle {
+                width: 180px;
+                height: 180px;
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Password Modal -->
+    <div id="pwd-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3><i class="fas fa-lock"></i> 管理员验证</h3>
+            <input type="password" id="pwd-input" class="modal-input" placeholder="请输入密码">
+            <div style="display:flex; gap:10px;">
+                <button class="btn-secondary" style="flex:1;" onclick="app.closeAuth()">取消</button>
+                <button class="btn-primary" style="flex:1;" onclick="app.checkAuth()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+
+        <!-- System Lock Overlay -->
+        <div id="system-lock-overlay"
+            style="position:fixed; top:0; left:0; width:100%; height:100%; background:#1e1b4b; z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; transition: opacity 0.5s;">
+            <div style="text-align:center; animation: fadeIn 1s;">
+                <i class="fas fa-shield-alt" style="font-size: 4rem; color: #818cf8; margin-bottom: 20px;"></i>
+                <h1 style="margin:0 0 10px 0; font-size:2.5rem;">系统已锁定</h1>
+                <p style="color:#94a3b8; margin-bottom:30px;">请输入访问密码以继续</p>
+
+                <input type="password" id="system-lock-input" placeholder="访问密码"
+                    style="padding:15px; border-radius:30px; border:none; width:280px; text-align:center; font-size:1.2rem; outline:none; margin-bottom:20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);"
+                    onkeydown="if(event.key==='Enter') app.unlockSystem()">
+
+                <div>
+                    <button onclick="app.unlockSystem()"
+                        style="padding:15px 40px; border-radius:30px; border:none; background:#6366f1; color:white; font-weight:bold; font-size:1.2rem; cursor:pointer; transition:all 0.2s;">
+                        解锁进入 <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div id="lock-error" style="color:#ef4444; margin-top:15px; min-height:24px;"></div>
+            </div>
+        </div>
+
+        <header class="glass">
+            <div class="brand">
+                <i class="fas fa-brain"></i>
+                <span>道法智学 Pro</span>
+                <span class="tag-badge">课堂版 2.0</span>
+            </div>
+            <div style="display: flex; gap: 20px;">
+                <button class="icon-btn" onclick="app.toggleSeewoMode()" title="大屏模式" id="btn-seewo">
+                    <i class="fas fa-tv"></i>
+                </button>
+                <button class="icon-btn" onclick="app.adminAuth()" title="设置">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="icon-btn" onclick="app.toggleTheme()" title="切换主题">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <button class="icon-btn" onclick="app.goHome()" title="首页">
+                    <i class="fas fa-home"></i>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- HOME DASHBOARD -->
+            <div id="view-home" class="view active">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">开启智能复习新体验</h1>
+                    <div class="welcome-subtitle">基于认知科学的自适应学习系统</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-total-answered">0</div>
+                        <div class="stat-label">累计刷题</div>
+                        <i class="fas fa-pen-nib card-icon-bg"></i>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-accuracy">0%</div>
+                        <div class="stat-label">正确率</div>
+                        <i class="fas fa-chart-line card-icon-bg"></i>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-streak">0</div>
+                        <div class="stat-label">连续打卡</div>
+                        <i class="fas fa-fire card-icon-bg" style="color: var(--warning)"></i>
+                    </div>
+                </div>
+
+                <div class="search-wrapper">
+                    <input type="text" class="search-bar" placeholder="输入关键词搜索考点（如：法律、友谊...）" id="search-input">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+
+                <!-- Default Grid -->
+                <div id="unit-grid-area">
+                    <div class="grid-container" id="unit-grid">
+                        <!-- Units injected here -->
+                    </div>
+                </div>
+
+                <!-- Search Results Area -->
+                <div id="search-results-area" class="hidden">
+                    <div class="search-header-actions">
+                        <h3 style="margin:0; font-size:1.8rem; color:var(--text-main);">搜索结果 <span id="search-count"
+                                style="color:var(--text-muted); font-size:0.6em; font-weight:normal; margin-left:10px;"></span>
+                        </h3>
+                        <div style="display:flex; gap:16px;">
+                            <button class="btn-secondary" onclick="app.clearSearch()">
+                                返回首页
+                            </button>
+                            <button class="btn-primary" id="btn-practice-search"
+                                onclick="app.startQuiz('search_results')">
+                                <i class="fas fa-play"></i> 练习这些题
+                            </button>
+                        </div>
+                    </div>
+                    <div id="search-list" style="margin-top: 30px;">
+                        <!-- Results injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUIZ INTERFACE -->
+            <div id="view-quiz" class="view">
+                <div class="quiz-container">
+                    <div class="progress-header">
+                        <span id="quiz-progress-text">Question 1/10</span>
+                        <span id="quiz-score-live">Score: 0</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+
+                    <div class="question-box">
+                        <div class="question-badge" id="q-tag">Unit 1</div>
+                        <div class="question-text" id="q-text">Loading...</div>
+
+                        <div class="options-list" id="q-options">
+                            <!-- Options injected here -->
+                        </div>
+
+                        <!-- Material Answer Section (Initially Hidden) -->
+                        <div id="material-section" class="hidden">
+                            <div
+                                style="font-weight: 800; margin-bottom: 16px; display:flex; align-items:center; gap:10px;">
+                                <i class="fas fa-check-circle" style="color:#d97706"></i> 参考答案 & 解析
+                            </div>
+                            <div id="material-content"></div>
+                        </div>
+
+                        <!-- Feedback Panel (For Choice & Material Source) -->
+                        <div class="feedback-panel" id="q-feedback">
+                            <div class="feedback-title">
+                                <i class="fas fa-lightbulb" style="color:var(--warning)"></i> 答案解析
+                            </div>
+                            <div id="q-explanation" style="line-height:1.6; margin-bottom: 20px;"></div>
+
+                            <div id="q-source-box" class="source-box hidden">
+                                <div style="font-weight:bold; color:var(--primary); margin-bottom:8px;">
+                                    <i class="fas fa-book-open"></i> 教材考点
+                                </div>
+                                <div id="q-source-content" style="color:var(--text-main);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding-bottom:80px;">
+                        <button class="btn-secondary" onclick="app.prevQuestion()" id="btn-prev">
+                            <i class="fas fa-arrow-left"></i> 上一题
+                        </button>
+
+                        <div style="display: flex; gap: 24px;">
+                            <button class="btn-secondary hidden" id="btn-show-ans" onclick="app.revealMaterial()">
+                                <i class="fas fa-eye"></i> 查看答案
+                            </button>
+                            <button class="btn-primary" onclick="app.nextQuestion()" id="btn-next">
+                                下一题 <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button class="btn-primary hidden" onclick="app.finishQuiz()" id="btn-finish">
+                                提交试卷 <i class="fas fa-flag-checkered"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ADMIN VIEW -->
+            <div id="view-admin" class="view">
+                <div class="glass" style="padding: 30px; border-radius: var(--radius-lg); margin-bottom: 30px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h2><i class="fas fa-cog"></i> 题目星级管理</h2>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-secondary" style="color:var(--error); border-color:var(--error);"
+                                onclick="app.resetAllData()"><i class="fas fa-trash-alt"></i> 重置数据</button>
+                            <button class="btn-secondary" onclick="app.goHome()">退出管理</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" id="admin-search" class="search-bar" placeholder="搜索题目..."
+                            style="font-size:1rem; padding:10px 20px;">
+                    </div>
+                    <div id="admin-list" style="max-height: 60vh; overflow-y: auto;">
+                        <!-- List items -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- DICTATION CONFIG -->
+            <div id="view-dictation-config" class="view">
+                <div class="glass"
+                    style="padding: 40px; border-radius: var(--radius-xl); max-width: 600px; margin: 0 auto; text-align: center;">
+                    <h2 class="welcome-title" style="font-size: 2rem;">默写挑战设置</h2>
+
+                    <div style="margin: 30px 0; text-align: left;">
+                        <label style="display:block; margin-bottom:10px; font-weight:bold;">1. 选择难度星级</label>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;" id="star-config-opts">
+                            <button class="star-filter-btn active"
+                                onclick="app.setDictationConfig('stars', 0)">全部</button>
+                            <button class="star-filter-btn" onclick="app.setDictationConfig('stars', 3)">⭐⭐⭐及以上</button>
+                            <button class="star-filter-btn"
+                                onclick="app.setDictationConfig('stars', 4)">⭐⭐⭐⭐及以上</button>
+                            <button class="star-filter-btn" onclick="app.setDictationConfig('stars', 5)">⭐⭐⭐⭐⭐</button>
+                        </div>
+                    </div>
+
+                    <div style="margin: 30px 0; text-align: left;">
+                        <label style="display:block; margin-bottom:10px; font-weight:bold;">2. 题目数量</label>
+                        <div style="display:flex; gap:10px;">
+                            <button class="star-filter-btn" onclick="app.setDictationConfig('count', 10)">10题</button>
+                            <button class="star-filter-btn" onclick="app.setDictationConfig('count', 20)">20题</button>
+                            <button class="star-filter-btn active"
+                                onclick="app.setDictationConfig('count', 30)">30题</button>
+                        </div>
+                    </div>
+
+                    <div style="margin: 30px 0; text-align: left;">
+                        <label style="display:block; margin-bottom:10px; font-weight:bold;">3. 倒计时 (分钟)</label>
+                        <input type="number" id="dictation-timer-input" value="10" min="1" max="60"
+                            style="padding:10px; border-radius:10px; border:1px solid var(--border); width:100px;">
+                    </div>
+
+                    <button class="btn-primary" onclick="app.startDictation()" style="width:100%;">
+                        开始默写 <i class="fas fa-pen-alt"></i>
+                    </button>
+                    <div style="margin-top: 20px;">
+                        <button class="btn-secondary" onclick="app.goHome()">返回首页</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DICTATION EXERCISE -->
+            <div id="view-dictation" class="view">
+                <div class="quiz-container">
+                    <div class="progress-header">
+                        <span id="dictation-progress">题目 1/5</span>
+                        <div id="dictation-timer" class="timer-display">10:00</div>
+                    </div>
+
+                    <div class="question-box">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div class="question-badge">默写题</div>
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <button class="peek-btn" onclick="app.togglePeekingAnswer()" title="偷看答案">
+                                    <i class="fas fa-eye" id="peek-icon"></i>
+                                </button>
+                                <div id="dictation-stars" style="color:#fbbf24;"></div>
+                            </div>
+                        </div>
+                        <div class="question-text" id="dictation-q-text"></div>
+
+                        <!-- Hidden Peek Answer Area -->
+                        <div id="peek-answer-area" class="peek-content"></div>
+
+                        <div id="dictation-input-area">
+                            <!-- Hint Text -->
+                            <div id="dictation-hint"
+                                style="color:var(--text-muted); text-align:center; margin-bottom:20px; font-style:italic; font-size:1.1rem;">
+                                请在纸上默写或心中默念答案，完成后点击查看
+                            </div>
+
+                            <!-- Hidden Inputs (Cleaned up: No student writing) -->
+                            <textarea id="user-dictation-input" class="dictation-input hidden"></textarea>
+
+                            <button class="btn-primary" onclick="app.revealDictationAnswer()"
+                                style="margin-top:20px; width:100%; padding:15px; font-size:1.2rem;">
+                                <i class="fas fa-eye"></i> 查看答案 & 自评
+                            </button>
+                        </div>
+
+                        <div id="dictation-answer-area" class="hidden">
+                            <!-- Diff View -->
+                            <div id="diff-view" class="feedback-panel"
+                                style="display:none; background:#f8fafc; border-left-color:var(--text-muted);">
+                                <div class="feedback-title" style="font-size:1.1rem; color:var(--text-muted);">您的输入比对：
+                                </div>
+                                <div id="diff-content" style="line-height:1.6;"></div>
+                            </div>
+
+                            <div class="feedback-panel material" style="display:block;">
+                                <div class="feedback-title">参考答案</div>
+                                <div id="dictation-answer-content" style="font-size:1.2rem; margin-bottom:20px;"></div>
+                                <div style="font-size:0.9rem; color:var(--text-muted);">
+                                    <b>评分标准：</b> <span id="dictation-points-info"></span>
+                                </div>
+                            </div>
+
+                            <div style="text-align:center; margin-top:30px;">
+                                <p>你答对了吗？</p>
+                                <div style="display:flex; gap:20px; justify-content:center;">
+                                    <button class="btn-secondary" style="border-color:var(--error); color:var(--error);"
+                                        onclick="app.rateDictation(false)">
+                                        <i class="fas fa-times"></i> 需要加强
+                                    </button>
+                                    <button class="btn-primary"
+                                        style="background:var(--success); border-color:var(--success);"
+                                        onclick="app.rateDictation(true)">
+                                        <i class="fas fa-check"></i> 完全正确
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn-secondary" onclick="app.quitDictation()">
+                            <i class="fas fa-times"></i> 退出练习
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULT INTERFACE -->
+            <div id="view-result" class="view">
+                <div class="result-container glass" style="border-radius: var(--radius-xl);">
+                    <div class="score-comment" id="final-comment"
+                        style="margin-bottom: 20px; font-size: 1.5rem; color: var(--text-main);">默写挑战完成！</div>
+
+                    <div class="stat-bars-container">
+                        <div class="stat-bar">
+                            <div class="stat-bar-label">
+                                <i class="fas fa-chart-line" style="color:var(--primary)"></i>
+                                <span>得分</span>
+                            </div>
+                            <div class="stat-bar-value" id="final-score" style="color:var(--primary)">0</div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-bar-label">
+                                <i class="fas fa-check-circle" style="color:var(--success)"></i>
+                                <span>答对</span>
+                            </div>
+                            <div class="stat-bar-value" id="res-correct" style="color:var(--success)">0</div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-bar-label">
+                                <i class="fas fa-times-circle" style="color:var(--error)"></i>
+                                <span>需加强</span>
+                            </div>
+                            <div class="stat-bar-value" id="res-wrong" style="color:var(--error)">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Summary List Container -->
+                    <div style="margin-bottom: 30px; text-align: left;">
+                        <h3 style="margin-bottom: 20px; color: var(--text-main); font-weight: 700;">
+                            <i class="fas fa-list-ul"></i> 本次默写题目清单
+                        </h3>
+                        <div id="dictation-summary-list" class="summary-list"
+                            style="margin-top: 0; max-height: none; overflow: visible;"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 30px; justify-content: center;">
+                        <button class="btn-secondary" onclick="app.goHome()">
+                            <i class="fas fa-home"></i> 返回首页
+                        </button>
+                        <button class="btn-primary" onclick="app.reviewWrong()">
+                            <i class="fas fa-redo"></i> 错题重练
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const TEXTBOOK_POINTS = [
+            {
+                "id": "kp_1",
+                "title": "社会生活的表现形式",
+                "content": "",
+                "source": "第一单元·第一课·【第一框  认识社会生活】"
+            },
+            {
+                "id": "kp_2",
+                "title": "社会生活的特点",
+                "content": "①社会生活是丰富多彩的。②社会生活是不断变化发展的。③社会生活具有公共性。",
+                "source": "第一单元·第一课·【第一框  认识社会生活】"
+            },
+            {
+                "id": "kp_3",
+                "title": "青少年要热爱生活，积极融入社会，将个人发展与社会进步紧密结合起来，共创共享美好生活。",
+                "content": "",
+                "source": "第一单元·第一课·【第一框  认识社会生活】"
+            },
+            {
+                "id": "kp_4",
+                "title": "个人与社会的关系",
+                "content": "①人是社会的人。我们都是社会的一员，每个人在社会中都有其相应的位置。\n②人的身份是在社会关系中确定的。在不同的社会关系（血缘关系、地缘关系、业缘关系等）中，我们具有不同的身份。\n③社会为人的生存和发展提供必要条件。④社会的发展离不开每个人的努力。",
+                "source": "第一单元·第一课·【第二框  我们都是社会的一员】"
+            },
+            {
+                "id": "kp_5",
+                "title": "社会化的含义：社会化是指一个人从最初的自然的生物个体转化为社会人的过程。",
+                "content": "",
+                "source": "第一单元·第二课·【第一框  人的社会化】"
+            },
+            {
+                "id": "kp_6",
+                "title": "社会化的主要内容（我们的成长是不断社会化的过程）",
+                "content": "①学习生活技能。②学习行为规范。③学习扮演社会角色。",
+                "source": "第一单元·第二课·【第一框  人的社会化】"
+            },
+            {
+                "id": "kp_7",
+                "title": "社会化伴随我们一生。我们要通过持续不断的学习，促进自我发展，创造更加美好的未来。",
+                "content": "",
+                "source": "第一单元·第二课·【第一框  人的社会化】"
+            },
+            {
+                "id": "kp_8",
+                "title": "什么是亲社会行为（性质、表现）",
+                "content": "①亲社会行为是符合社会道德要求、有益于他人和社会的行为。（性质）\n②谦让、分享、合作、帮助他人、关心社会发展等，都是亲社会行为。（表现）",
+                "source": "第一单元·第二课·【第二框  养成亲社会行为】"
+            },
+            {
+                "id": "kp_9",
+                "title": "青少年为什么应该养成亲社会行为（必要性）",
+                "content": "①青少年阶段是人的社会化的重要时期。\n②亲社会行为促进个人成长和社会进步。亲社会行为有利于我们养成良好的行为习惯，形成正确的价值观，获得他人和社会的接纳与认可；能够为他人带来温暖，使人际关系更加融洽，为社会增添正能量。",
+                "source": "第一单元·第二课·【第二框  养成亲社会行为】"
+            },
+            {
+                "id": "kp_10",
+                "title": "我们如何养成亲社会行为（途径和方法）",
+                "content": "①亲社会行为在人际交往和社会实践中养成。②我们要主动了解社会，关注社会变化发展。③了解风俗习惯，遵守社会公德，积极融入社会生活。④热心帮助他人，积极投身于社会实践，以聪明才智贡献国家，以开拓进取服务社会。",
+                "source": "第一单元·第二课·【第二框  养成亲社会行为】"
+            },
+            {
+                "id": "kp_11",
+                "title": "互联网是人类社会发展的重要成果，是人类文明向信息时代演进的关键标志。",
+                "content": "",
+                "source": "第一单元·第三课·【第一框  网络改变世界】"
+            },
+            {
+                "id": "kp_12",
+                "title": "网络改变世界的表现（网络改变生活、推动社会进步）",
+                "content": "①网络深刻改变着我们的生活方式。②网络促进了人际交往。\n③网络推动了生产方式的深刻变革。④网络改变了社会治理方式。",
+                "source": "第一单元·第三课·【第一框  网络改变世界】"
+            },
+            {
+                "id": "kp_13",
+                "title": "我们应如何认识网络世界",
+                "content": "网络改变了社会生活，我们在享受网络带来的便利的同时，也要全面认识网络，了解其可能衍生的社会问题。",
+                "source": "第一单元·第三课·【第二框  营造清朗空间】"
+            },
+            {
+                "id": "kp_14",
+                "title": "怎样营造风清气正的网络空间",
+                "content": "①要全面认识网络，了解其可能衍生的社会问题。\n②要学会理性参与网络生活，提升媒介素养，积极利用网络获取新知、促进沟通、完善自我。\n③学会选择网络信息，学会“信息节食”，破除“信息茧房”。\n④自觉抵制不良信息。要提高个人信息保护意识，学会分析判断网络信息，让不良信息止于智者。\n⑤恪守道德，遵守法律。每个人都应该对自己的网络言论负责。\n⑥传播网络正能量。科学、文明、安全、合理使用网络，高扬主旋律，建设网上精神家园；践行社会主义核心价值观，通过网络平台积极参与公共事务，投身于公益事业，做网络强国的建设者、创新者。",
+                "source": "第一单元·第三课·【第二框  营造清朗空间】"
+            },
+            {
+                "id": "kp_15",
+                "title": "如何辨别网络谣言",
+                "content": "①注意信息出处；②关注官方信息。③对信息进行多方验证。④辨识信息内容。⑤向他人求助。",
+                "source": "第一单元·第三课·【第二框  营造清朗空间】"
+            },
+            {
+                "id": "kp_16",
+                "title": "社会生活需要秩序。社会秩序是社会生活有条不紊、井然有序的状态。",
+                "content": "社会秩序是社会正常运行、人民安居乐业的重要保障。与人们日常生活关系密切的社会秩序，包括交通秩序、生产秩序、公共场所秩序等。",
+                "source": "第二单元·第四课·【第一框  维护秩序靠规则】"
+            },
+            {
+                "id": "kp_17",
+                "title": "社会规则有很多，如道德、纪律、法律等。其中，道德和法律是两种主要社会规则。",
+                "content": "",
+                "source": "第二单元·第四课·【第一框  维护秩序靠规则】"
+            },
+            {
+                "id": "kp_18",
+                "title": "社会规则与社会秩序的关系",
+                "content": "①社会秩序离不开社会规则的维系。社会规则具有规范社会行为、调节社会关系、维护社会秩序的作用。\n②社会规则保障社会秩序的实现。",
+                "source": "第二单元·第四课·【第一框  维护秩序靠规则】"
+            },
+            {
+                "id": "kp_19",
+                "title": "如何遵守规则",
+                "content": "①遵守规则，需要增强规则意识。  ②遵守规则，需要他律和自律。\n③遵守规则，需要坚定地维护规则。④遵守规则，还需要积极完善规则。\n道德是社会关系的基石，是人际和谐的基础。\n社会生活中基本的道德规范：文明有礼、诚实守信、友善待人等。",
+                "source": "第二单元·第四课·【第二框  遵守规则】"
+            },
+            {
+                "id": "kp_20",
+                "title": "为什么要文明有礼（重要性）",
+                "content": "①文明有礼是调整和规范人际关系的行为准则，直接体现一个人的基本素质，也事关社会风尚、国家形象。②文明有礼是一个人立身处世的前提。③文明有礼促进社会和谐发展。④文明有礼塑造良好国家形象。",
+                "source": "第二单元·第五课·【第一框  文明有礼】"
+            },
+            {
+                "id": "kp_21",
+                "title": "怎样做到文明有礼",
+                "content": "①要增强文明有礼意识，讲文明、懂礼貌、守礼仪，营造良好社会风尚。\n②要言谈文明、举止端庄。\n③要不断学习、观察、思考和践行。从小事做起，从细节做起，做一个学礼、明礼、守礼的人，为创建和谐美好的社会贡献力量。",
+                "source": "第二单元·第五课·【第一框  文明有礼】"
+            },
+            {
+                "id": "kp_22",
+                "title": "诚实守信的内涵：诚实守信（诚信），就是言行一致、表里如一、信守承诺。",
+                "content": "",
+                "source": "第二单元·第五课·【第二框 诚实守信】"
+            },
+            {
+                "id": "kp_23",
+                "title": "为什么要诚信（重要性）",
+                "content": "①诚信是中华民族的传统美德，是社会各行各业的共同道德要求，也是社会主义核心价值观和公民基本道德规范的重要内容。②人以诚信立身，诚信是我们做人做事的基本准则。③诚信促进社会文明。④人人都是诚信的受益者，也应该成为诚信的践行者。",
+                "source": "第二单元·第五课·【第二框 诚实守信】"
+            },
+            {
+                "id": "kp_24",
+                "title": "怎样践行诚信",
+                "content": "①真诚待人，积极履行承诺。要增强诚信意识。②讲究策略，注重方式方法。做一个有智慧的诚实守信者。③遵纪守法，珍惜诚信记录。",
+                "source": "第二单元·第五课·【第二框 诚实守信】"
+            },
+            {
+                "id": "kp_25",
+                "title": "友善的内涵：友善，就是待人热情友好，与人为善。",
+                "content": "",
+                "source": "第二单元·第五课·【第三框 友善待人】"
+            },
+            {
+                "id": "kp_26",
+                "title": "为什么要友善待人",
+                "content": "①友善是社会主义核心价值观的要求，是中华民族的传统美德。②在社会生活中，以友善的态度对待他人，彼此尊重、包容多样，能够传递温暖与爱心，加深社会成员之间的信任，营造互信互助的社会风气，促进社会和谐。",
+                "source": "第二单元·第五课·【第三框 友善待人】"
+            },
+            {
+                "id": "kp_27",
+                "title": "怎样做到友善待人",
+                "content": "①宽容他人。②换位思考。③助人为乐。",
+                "source": "第二单元·第五课·【第三框 友善待人】"
+            },
+            {
+                "id": "kp_28",
+                "title": "法律的基本内涵和重要作用",
+                "content": "法律是一种社会规则和行为规范，是评价人们的行为是否合法有效的准绳。\n我们必须在法律范围内活动，以法律为行为准则，依照法律行使权利、履行义务，树立法治观念，学会依法办事。",
+                "source": "第二单元·第六课·【第一框  树立法治理念】"
+            },
+            {
+                "id": "kp_29",
+                "title": "法治观念的表现：法治观念体现为为人们对法律发自内心的认可、崇尚、遵守和服从。",
+                "content": "",
+                "source": "第二单元·第六课·【第一框  树立法治理念】"
+            },
+            {
+                "id": "kp_30",
+                "title": "如何树立法治观念",
+                "content": "①敬畏和信仰法律。要坚持宪法法律至上，敬畏法律规则，相信法律的力量，牢固树立法律红线不能触碰、法律底线不可逾越的观念，自觉自愿地遵守法律，把依法办事当成自己的生活习惯。\n②积极主动地学习法律。要学习个人成和参与社会生活必备的基本法律常识，正确理解法律；要积极参加各种法治实践活动，理性分析社会生活中的法律问题，提升维护自身合法权益、参与社会生活的能力。\n③树立守法光荣、违法可耻的观念。要从细节抓起、从小事做起，从遵守规则做起；自觉践行社会主义核心价值观，自觉履行法定义务看、社会责任、家庭责任。",
+                "source": "第二单元·第六课·【第一框  树立法治理念】"
+            },
+            {
+                "id": "kp_31",
+                "title": "学会依法办事的重要性",
+                "content": "建设法治社会，需要全体社会成员自觉守法、遇事找法、解决问题靠法，养成依法办事的习惯，依法维护社会秩序，确保社会和谐有序。",
+                "source": "第二单元·第六课·【第二框  学会依法办事】"
+            },
+            {
+                "id": "kp_32",
+                "title": "如何做到依法办事（途径）",
+                "content": "①自觉守法。遵守宪法和法律是公民的一项基本义务。\n②遇事找法。在遇到法律问题或者合法权益受到侵害时，我们要主动咨询相关专业人士，充分利用能够提供法律服务的组织和机构，获得及时有效的法律帮助。\n③解决问题靠法。当生活中遇到矛盾纠纷，特别是自己或他人权益受到非法侵害时，我们要学会以合法的方式表达诉求，通过法律途径、运用法律武器加以解决。",
+                "source": "第二单元·第六课·【第二框  学会依法办事】"
+            },
+            {
+                "id": "kp_33",
+                "title": "诉讼：诉讼是人们获得法律救济、维护合法权益的重要途经。诉讼通常分为民事诉讼、行政诉讼、刑事诉讼。",
+                "content": "",
+                "source": "第二单元·第六课·【第二框  学会依法办事】"
+            },
+            {
+                "id": "kp_34",
+                "title": "如何提升法治素养",
+                "content": "要树立法治观念，提高依法办事能力，养成尊法学法守法用法的习惯，弘扬社会主义法治精神，传承中华优秀传统法律文化，逐步成长为社会主义法治的忠实崇尚者、自觉遵守者、坚定捍卫者。\n第七课\t 追求自由平等\n自由平等、公平正义是我们的价值追求。维护自由平等、捍卫公平正义是勇担社会责任的体现。",
+                "source": "第二单元·第六课·【第二框  学会依法办事】"
+            },
+            {
+                "id": "kp_35",
+                "title": "如何理解自由（内涵）",
+                "content": "①自由是社会主义核心价值观的重要内容。\n②自由意味着在遵守道德、纪律、法律等社会规则的前提下，人们能够依照自己的意志活动，在思想、言论和行为等方面具有充分的自主性，拥有广阔的发展空间。\n③自由表现为人们免于恐吓、羞辱和歧视，过有尊严的生活，具有安全感、幸福感，对未来充满信心。\n④自由意味着我们的合法权利不受侵犯。\n⑤自由是有限制的、相对的。我们要在遵守道德、纪律、法律等社会规则的前提下行使权利。",
+                "source": "第三单元··【第一框  珍视自由】"
+            },
+            {
+                "id": "kp_36",
+                "title": "自由的价值",
+                "content": "①自由是人类的永恒追求，是社会活力之源，是社会主义核心价值观的重要内容。\n②自由促进人们的全面发展。\n③自由推动社会的繁荣进步。",
+                "source": "第三单元··【第一框  珍视自由】"
+            },
+            {
+                "id": "kp_37",
+                "title": "如何正确对待自由",
+                "content": "①珍惜宪法和法律赋予的权利。我们要知晓自己的权利，正确认识权利的价值。当权利受到侵犯时，我们要敢于捍卫自己的合法权利。\n②依法行使权利。我们要在遵守道德、纪律、法律等社会规则的前提下行使权利。\n③尊重他人的权利。我们要尊重他人的自由选择权，尊重他人的人格尊严。",
+                "source": "第三单元··【第一框  珍视自由】"
+            },
+            {
+                "id": "kp_38",
+                "title": "如何理解平等（内涵、表现）",
+                "content": "①平等意味着同等情况同等对待。②平等表现为人格平等。③平等意味着权利义务平等。",
+                "source": "第三单元··【第二框  践行平等】"
+            },
+            {
+                "id": "kp_39",
+                "title": "平等的价值",
+                "content": "①平等是人类的崇高理性，是社会主义核心价值观的重要内容。\n②平等是社会发展的永恒主题，它有助于人们政治上平等参与、经济上共同富裕、文化上共建共享。③实现人与人之间的平等，是人类的美好梦想。P64",
+                "source": "第三单元··【第二框  践行平等】"
+            },
+            {
+                "id": "kp_40",
+                "title": "如何践行平等",
+                "content": "①正确理解平等，努力践行平等。②平等对待他人。③敢于抵制不平等的行为，要坚决反对特权。④要增强平等意识，把平等原则落实到日常的生活、学习和工作中，共同建设平等有序的社会。\n第八课\t 维护公平正义\n公正是社会主义核心价值观的重要内容。公正即公平正义。公平正义是人类的永恒追求，是衡量社会发展进步的重要尺度。维护社会公平正义是勇担社会责任的体现。",
+                "source": "第三单元··【第二框  践行平等】"
+            },
+            {
+                "id": "kp_41",
+                "title": "如何正确认识公平（基本内涵）",
+                "content": "①公平通常指人们基于一定标准或原则，处理事情合情合理、不偏不倚。②在社会生活中，公平意味着每个人都拥有同等的发展机会和条件，都要按照规则办事。③公平不是绝对的，而是相对的，受各种主客观条件的制约。",
+                "source": "第三单元··【第一框  坚守公平】"
+            },
+            {
+                "id": "kp_42",
+                "title": "公平的价值",
+                "content": "①公平是个人生存和发展的重要保障。②公平是社会稳定和进步的重要基础。",
+                "source": "第三单元··【第一框  坚守公平】"
+            },
+            {
+                "id": "kp_43",
+                "title": "如何维护公平",
+                "content": "①维护社会公平，需要每个人努力追求公平、捍卫公平。\n②维护社会公平，需要充分发挥规则的保障作用。\n③公平的实现是一个不断推进的过程，我们要积极行动起来，通过不懈努力追求和捍卫公平。",
+                "source": "第三单元··【第一框  坚守公平】"
+            },
+            {
+                "id": "kp_44",
+                "title": "正义的内涵",
+                "content": "正义是社会文明的尺度，表达了人们对美好社会的期待和追求。正义是人类良知的“声音”，体现了弘扬真善美、摒弃假恶丑的价值导向。正义行为有利于促进社会进步、维护公共利益。2.正义的价值\n①正义保障人们有尊严地生活。②正义营造风清气正的社会风尚。③追求正义是社会生活的一个重要主题。有正义感、为人正直是做人的基本要求，期盼正义、捍卫正义是我们的共同心声。④正义是全人类共同价值的重要内容。P74",
+                "source": "第三单元··【第二框  守护正义】"
+            },
+            {
+                "id": "kp_45",
+                "title": "正义的要求",
+                "content": "①正义要求保障每个人的合法权益，对弱者给予必要的扶助。②正义要求人们明辨是非、爱憎分明、惩恶扬善，使受害者得到救济、违法者受到惩罚，弘扬社会正气；要求人们顾全大局、办事公道、无私无畏，积极营造和谐、稳定、安宁的社会环境，为社会发展注入不竭动力。",
+                "source": "第三单元··【第二框  守护正义】"
+            },
+            {
+                "id": "kp_46",
+                "title": "如何守护正义",
+                "content": "①守护正义需要勇气和智慧。要敢于斗争，相信正义必定战胜邪恶；要讲究策略，寻找有效的方法，善于做到见义智为。\n②守护正义需要维护司法公正。法律是维护和实现正义的基本途径，公正司法是捍卫正义的最后一道防线。\n③守护正义需要维护国际正义。\n第九课\t 积极奉献社会",
+                "source": "第三单元··【第二框  守护正义】"
+            },
+            {
+                "id": "kp_47",
+                "title": "责任的含义。责任是一个人分内应该做的事情。",
+                "content": "",
+                "source": "第三单元··【第一框  社会责任我担当】"
+            },
+            {
+                "id": "kp_48",
+                "title": "承担责任的表现、意义和要求",
+                "content": "①对自己负责。要对自己的身心健康和学习成长负责，保持健康的生活方式，合理规划时间，认真完成作业，等等。\n②对他人负责。要平等、真诚对待他人，公正处事，同时要心怀感恩、善待他人主动关心、帮助和服务他人，尽己所能为他人排忧解难。\n③对国家和社会负责。要有强烈的主人翁意识和社会责任感，关心国家大事，将个人成长进步与国家社会发展紧密结合起来，以实际行动报效祖国、服务人民、奉献社会。",
+                "source": "第三单元··【第一框  社会责任我担当】"
+            },
+            {
+                "id": "kp_49",
+                "title": "承担则的代价与回报",
+                "content": "①代价：承担责任意味着我们要付出时间、精力和金钱，甚至可能会被误解和责备。\n②回报：在这个过程中，我们也会增长才干，赢得他人的尊重和赞许。\n③态度：在社会生活中，每个人都应明确自己需要承担的社会责任。我们要甘于奉献，勇于承担应尽的责任，不抱怨、不懈怠，不计个人得失，全身心地投入。我尽责，我无悔。",
+                "source": "第三单元··【第一框  社会责任我担当】"
+            },
+            {
+                "id": "kp_50",
+                "title": "奉献社会的表现:积极参与社区服务、环境保护、敬老助残等。",
+                "content": "",
+                "source": "第三单元··【第二框 奉献社会我践行】"
+            },
+            {
+                "id": "kp_51",
+                "title": "奉献社会的意义",
+                "content": "①奉献社会能够使我们的视野不断拓展，知识不断丰富，能力不断提高，道德境界不断提升。②奉献社会能够推动国家发展、社会进步，推动形成向上向善的强大力量，使我们的社会变得更加和谐美好。",
+                "source": "第三单元··【第二框 奉献社会我践行】"
+            },
+            {
+                "id": "kp_52",
+                "title": "如何以实际行动奉献社会",
+                "content": "①自觉加强学习，不断增强本领。②追求进步，主动向团组织靠拢。\n③积极参与志愿者服务活动。    ④勇于担当时代责任。",
+                "source": "第三单元··【第二框 奉献社会我践行】"
+            },
+            {
+                "id": "kp_53",
+                "title": "中国共产主义青年团的性质、作用",
+                "content": "①性质：中国共产主义青年团是中国共产党领导的先进青年的群团组织，是广大青年在实践中学习中国特色社会主义和共产主义的学校，是中国共产党的助手和后备军。\n②作用：中国共产主义青年团带领青年在经济社会发展中发挥生力军和突击队作用。\n③态度：我们要积极参加团组织活动，坚定理想信念，埋头苦干、真诚奉献，努力成为对国家和社会有用的人。\n第十课\t 国家利益至上",
+                "source": "第三单元··【第二框 奉献社会我践行】"
+            },
+            {
+                "id": "kp_54",
+                "title": "祖国是我们成长的摇篮。对伟大祖国，我们怀有最深厚、最纯洁、最高尚、最神圣的情感。",
+                "content": "",
+                "source": "第四单元··【第一框  国家利益高于一切】"
+            },
+            {
+                "id": "kp_55",
+                "title": "什么是国家利益（内涵和构成）",
+                "content": "①国家利益是一个主权国家在国际社会中生存需求和发展需求的总和，涉及政治、经济、文化、社会、军事等领域，关系民族生存、国家兴亡。\n②我国的核心利益包括国家主权、国家安全、领土完整、国家统一、宪法确立的国家政治制度和社会大局稳定、经济社会可持续发展的基本保障。\n③确保国家主权和领土完整是一条不可逾越的红线。主权是一个国家独立自主处理对内对外事务的最高权力。主权的丧失意味着国家的解体和灭亡。领土是国家行使主权的范围和空间，也是一个主权国家人民得以生息繁衍的最基本的物质基础。",
+                "source": "第四单元··【第一框  国家利益高于一切】"
+            },
+            {
+                "id": "kp_56",
+                "title": "为什么要维护国家利益",
+                "content": "①国家利益关系民族生存、国家兴亡。\n②在我们国家，国家利益是广大人民最根本、最长远的利益。\n③维护国家利益是实现国家富强、民族振兴、人民幸福的重要保证。\n④维护国家利益是每个公民的基本义务。",
+                "source": "第四单元··【第一框  国家利益高于一切】"
+            },
+            {
+                "id": "kp_57",
+                "title": "国家利益与人民利益的关系",
+                "content": "①国家利益是人民利益的集中体现。我国是人民当家作主的社会主义国家，国家利益反映广大人民的共同需求，体现人民对美好生活的向往与期盼，国家利益与人民利益是高度统一的。\n②国家利益只有反映人民利益，依靠人民艰苦奋斗，才能得到真正的实现。",
+                "source": "第四单元··【第一框  国家利益高于一切】"
+            },
+            {
+                "id": "kp_58",
+                "title": "我们应如何捍卫国家利益",
+                "content": "①我们要牢固树立国家利益至上观念，以热爱祖国为荣、以危害祖国为耻，坚决维护国家的尊严、荣誉和利益。②增强维护国家利益的责任感和使命感。\n③正确处理国家利益与个人利益的关系。以国家利益为重。④发扬斗争精神。",
+                "source": "第四单元··【第二框  捍卫国家利益】"
+            },
+            {
+                "id": "kp_59",
+                "title": "如何正确处理国家利益与个人利益的关系",
+                "content": "①关系：国家利益是整体利益，个人利益是局部利益。从根本上说，国家利益与个人利益是一致的。有时，国家利益难免同个人利益发生冲突。\n②做法：无论何时何地，我们都应当顾全大局，把国家利益放在第一位。为了国家利益，必要时放弃个人利益，甚至要献出自己的生命。\n第十一课\t军强才能国安",
+                "source": "第四单元··【第二框  捍卫国家利益】"
+            },
+            {
+                "id": "kp_60",
+                "title": "人民军队的地位与构成、最高军事机关",
+                "content": "①地位：中国人民解放军是中国共产党缔造和领导的人民军队，是全国武装力量的主体。\n②构成：包括陆军、海军、空间、火箭军等军种，军事航天部队、网络空间部队、信息支援部队、联勤保障部队等兵种。\n③中国人民解放军的最高军事机关为中央军事委员会。",
+                "source": "第四单元··【第一框  党和人民信赖的英雄军队】"
+            },
+            {
+                "id": "kp_61",
+                "title": "人民军队的优良传统和鲜明特质",
+                "content": "①人民军队是一支对党忠诚、听党指挥的军队。\n②人民军队是一支攻无不克、战无不胜的军队。\n③人民军队是一支纪律严明、作风优良的军队。",
+                "source": "第四单元··【第一框  党和人民信赖的英雄军队】"
+            },
+            {
+                "id": "kp_62",
+                "title": "人民军队是党和人民完全可以信赖的英雄军队，坚决履行党和人民赋予的使命任务。",
+                "content": "①巩固中国共产党领导和社会主义制度。②捍卫国家主权、统一、领土完整。\n③维护国家海外利益。\t\t\t\t④促进世界和平与发展。",
+                "source": "第四单元··【第一框  党和人民信赖的英雄军队】"
+            },
+            {
+                "id": "kp_63",
+                "title": "为什么要全面推进国防和军队现代化",
+                "content": "强国必须强军。巩固国防和强大人民军队是新时代坚持和发展中国特色社会主义、实现中华民族伟大复兴的战略支撑。",
+                "source": "第四单元··【第二框 全面推进国防和军队现代化】"
+            },
+            {
+                "id": "kp_64",
+                "title": "新时代的强军目标",
+                "content": "①总体目标：建设一支听党指挥、能打胜仗、作风优良的人民军队，把人民军队建设成为世界一流军队。②国防和军队现代化新“三步走”战略安排。",
+                "source": "第四单元··【第二框 全面推进国防和军队现代化】"
+            },
+            {
+                "id": "kp_65",
+                "title": "如何全面推进国防和军队现代化（基本路径）",
+                "content": "①必须全面贯彻习近平强军思想。\t\t\t②坚持党对军队的绝对领导。\n③以高水平治理推动人民军队高质量发展。\t④加强全面国防教育。\n第十二课\t树立总体国家安全观",
+                "source": "第四单元··【第二框 全面推进国防和军队现代化】"
+            },
+            {
+                "id": "kp_66",
+                "title": "国家安全的内涵",
+                "content": "国家安全是国家政权、主权、统一和领土完整、人民福祉、经济社会可持续发展和国家其他重大利益相对处于没有危险和不受内外威胁的状态，以及保障持续安全状态的能力。",
+                "source": "第四单元··【第一框  认识国家安全】"
+            },
+            {
+                "id": "kp_67",
+                "title": "国家安全的重要性",
+                "content": "①国家安全是国家生存和发展的重要保障，是民族复兴的根基，是实现国家利益最根本的保障。\n②国家安全是人民幸福安康的前提。",
+                "source": "第四单元··【第一框  认识国家安全】"
+            },
+            {
+                "id": "kp_68",
+                "title": "为什么要坚持总体国家安全观",
+                "content": "进入新时代，国家安全的内涵和外延比历史上任何时候都要丰富，时空领域比历史上任何时候都要宽广，内外因素比历史上任何时候都要复杂。面对日益复杂、严峻的安全形势，我们必须坚持总体国家安全观。",
+                "source": "第四单元··【第一框  认识国家安全】"
+            },
+            {
+                "id": "kp_69",
+                "title": "何为总体国家安全观",
+                "content": "①总体国家安全观关键在“总体”，突出的是“大安全”理念，涵盖政治、军事、国土、经济、文化、社会、科技、网络、生态、资源、核、海外利益、太空、深海、极地、生物等诸多领域。\n②总体国家安全的核心要义，集中体现为“十个坚持”。",
+                "source": "第四单元··【第一框  认识国家安全】"
+            },
+            {
+                "id": "kp_70",
+                "title": "如何贯彻总体国家安全观",
+                "content": "①要坚持以人民安全为宗旨、以政治安全为根本、以经济安全为基础、以军事科技文化安全为保障、以促进国际安全为依托，统筹外部安全和内部安全、国土安全和国民安全、传统安全和非传统安全、自身安全和共同安全，统筹维护和塑造国家安全。",
+                "source": "第四单元··【第一框  认识国家安全】"
+            },
+            {
+                "id": "kp_71",
+                "title": "我国的国家安全环境面临着怎样的挑战",
+                "content": "当前，世界百年未有之大变局加速演进，我国发展进入战略机遇和风险挑战并存、不确定难预料因素增多的时期。",
+                "source": "第四单元··【第二框  维护国家安全】"
+            },
+            {
+                "id": "kp_72",
+                "title": "如何维护国家安全",
+                "content": "①我们必须增强忧患意识，做到居安思危、未雨绸缪，增强维护国家安全的能力，推动全社会形成维护国家安全的强大合力，筑牢国家安全人民防线。\n②自觉履行国家安全的义务。我们要树立国家安全利益高于一切的观念，增强维护国家安全的意识。\n③不断提升国家安全素养。我们要自觉接受国家安全教育，提高维护国家安全的能力，维护国家安全贡献智慧和力量。",
+                "source": "第四单元··【第二框  维护国家安全】"
+            }
+        ];
+
+        const DATA = [{ "id": "u1", "title": "第一单元 走进社会生活", "questions": [{ "id": "u1_q1", "type": "choice", "question": "1.（2025·新课标）“风声雨声读书声，声声入耳；家事国事天下事，事事关心。”这启示我们（　　）", "options": ["A. 只需专注学习，无需关注社会", "B. 人的成长是不断社会化的过程", "C. 社会生活复杂，应尽量远离", "D. 关心社会就能成为社会精英"], "answer": "B", "explanation": "材料强调个人与社会的紧密联系，体现“社会化”是成长必经过程。", "source": "考点：第一单元·第一课·第一框｜教材P2" }, { "id": "u1_q2", "type": "choice", "question": "2.（2024·重庆）小明参加社区志愿服务后说：“我帮助了别人，也收获了快乐。”这说明亲社会行为（　　）<br>①有利于养成良好行为习惯<br>②能获得他人和社会认可<br>③一定能带来物质回报<br>④有助于实现人生价值", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "亲社会行为重在精神层面收获，③“物质回报”说法绝对化，错误。", "source": "考点：第一单元·第二课·第二框｜教材P18" }, { "id": "u1_q3", "type": "choice", "question": "3.（2023·河南）下列属于亲社会行为的是（　　）<br>①主动给老人让座<br>②参与校园垃圾分类宣传<br>③在朋友圈转发未经核实的求助信息<br>④周末到图书馆做志愿者", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "③未核实信息可能造成误导，不属于理性亲社会行为。", "source": "考点：第一单元·第二课·第二框｜教材P17" }, { "id": "u1_q4", "type": "choice", "question": "4.（2025·模拟）“人离不开社会，就像鱼离不开水。”这句话强调（　　）", "options": ["A. 社会由个人组成", "B. 个人从社会中获得物质支持和精神滋养", "C. 社会发展依赖个人努力", "D. 个人可以脱离社会独立生存"], "answer": "B", "explanation": "比喻强调个人对社会的依赖性，B最贴切。", "source": "考点：第一单元·第一课·第二框｜教材P7" }, { "id": "u1_q5", "type": "choice", "question": "5.（2024·浙江）网络直播带货、在线教育、远程办公等新形式，体现了网络（　　）", "options": ["A. 为经济发展注入新活力", "B. 促进民主政治进步", "C. 完全取代传统生活方式", "D. 必然导致沉迷问题"], "answer": "A", "explanation": "材料列举经济与生活新业态，体现网络推动经济发展。", "source": "考点：第一单元·第三课·第一框｜教材P36" }, { "id": "u1_q6", "type": "choice", "question": "6.（2023·广东）青少年沉迷网络游戏，可能导致（　　）<br>①视力下降　②学业荒废　③社交能力增强　④情绪焦虑", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "沉迷网络通常削弱现实社交，③错误。", "source": "考点：第一单元·第三课·第一框｜教材P37" }, { "id": "u1_q7", "type": "choice", "question": "7.（2025·北京）某中学生在网上匿名辱骂同学，被学校批评。这警示我们（　　）", "options": ["A. 网络空间没有自由", "B. 网络交往可以不守规则", "C. 恪守道德、遵守法律是网络生活基本准则", "D. 匿名发言不受任何约束"], "answer": "C", "explanation": "网络不是法外之地，必须遵守道德与法律底线。", "source": "考点：第一单元·第三课·第二框｜教材P43" }, { "id": "u1_q8", "type": "choice", "question": "8.（2024·江苏）“纸上得来终觉浅，绝知此事要躬行。”这启示青少年（　　）", "options": ["A. 只需读书，无需实践", "B. 社会实践比课堂学习更重要", "C. 要主动了解社会，积极投身社会实践", "D. 实践活动浪费学习时间"], "answer": "C", "explanation": "强调实践对认识社会的重要性，C正确。", "source": "考点：第一单元·第一课·第一框｜教材P4" }, { "id": "u1_q9", "type": "choice", "question": "9.（2023·四川）下列行为中，属于养成亲社会行为的是（　　）", "options": ["A. 在公交车上大声外放视频", "B. 看到有人摔倒立即扶起", "C. 在景区墙上刻“到此一游”", "D. 考试时偷偷帮同学传纸条"], "answer": "B", "explanation": "B体现关爱他人，是亲社会行为；其他选项均违反公德或规则。", "source": "考点：第一单元·第二课·第二框｜教材P18" }, { "id": "u1_q10", "type": "choice", "question": "10.（2025·福建）网络谣言“某地自来水有毒”引发抢购瓶装水。这说明（　　）", "options": ["A. 网络信息都是虚假的", "B. 网络传播速度快，影响广", "C. 公众缺乏基本生活常识", "D. 政府监管完全失效"], "answer": "B", "explanation": "强调网络信息传播的双面性，B客观准确。", "source": "考点：第一单元·第三课·第一框｜教材P38" }, { "id": "u1_q11", "type": "choice", "question": "11.（2024·山东）人的身份是在______中确定的。（　　）", "options": ["A. 家庭生活", "B. 学校教育", "C. 社会关系", "D. 个人想象"], "answer": "C", "explanation": "", "source": "考点：第一单元·第一课·第二框｜教材P5" }, { "id": "u1_q12", "type": "choice", "question": "12.（2023·湖南）青少年参与社会的过程，既是体验社会生活的过程，也是（　　）", "options": ["A. 脱离家庭的过程", "B. 发展和成就自己的过程", "C. 获取金钱回报的过程", "D. 追求个人名利的过程"], "answer": "B", "explanation": "", "source": "考点：第一单元·第二课·第二框｜教材P19" }, { "id": "u1_q13", "type": "choice", "question": "13.（2025·天津）网络无限，自由有界。网络生活的基本准则是（　　）", "options": ["A. 自由发言，无拘无束", "B. 恪守道德、遵守法律", "C. 只要不违法，可以不讲道德", "D. 匿名即可随意表达"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第二框｜教材P43" }, { "id": "u1_q14", "type": "choice", "question": "14.（2024·陕西）“世界是一棵树，人是它的果实。”这句谚语告诉我们（　　）", "options": ["A. 个人可以脱离社会而存在", "B. 社会离不开个人", "C. 个人是社会的有机组成部分", "D. 树比人更重要"], "answer": "C", "explanation": "", "source": "考点：第一单元·第一课·第二框｜教材P5" }, { "id": "u1_q15", "type": "choice", "question": "15.（2023·江西）下列做法中，有利于理性参与网络生活的是（　　）<br>①浏览新闻网站了解时事<br>②随意点击不明链接<br>③利用网课平台自主学习<br>④在评论区辱骂不同意见者", "options": ["A. ①②", "B. ①③", "C. ②④", "D. ③④"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第二框｜教材P42–44" }, { "id": "u1_q16", "type": "choice", "question": "16.（2025·辽宁）亲社会行为在______中养成。（　　）", "options": ["A. 课堂听讲", "B. 人际交往和社会实践", "C. 玩电子游戏", "D. 独自思考"], "answer": "B", "explanation": "", "source": "考点：第一单元·第二课·第二框｜教材P19" }, { "id": "u1_q17", "type": "choice", "question": "17.（2024·吉林）网络让信息传递和交流变得方便迅捷，但也存在陷阱。这说明（　　）", "options": ["A. 应全面禁止使用网络", "B. 网络只有弊端", "C. 要理性看待网络，趋利避害", "D. 青少年无法辨别网络信息"], "answer": "C", "explanation": "", "source": "考点：第一单元·第三课·第一框｜教材P38" }, { "id": "u1_q18", "type": "choice", "question": "18.（2023·广西）小华利用假期到社区服务中心做志愿者，帮助整理图书。他的行为（　　）<br>①是服务社会的表现<br>②浪费了宝贵假期<br>③有助于培养社会责任感<br>④属于亲社会行为", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "C", "explanation": "", "source": "考点：第一单元·第二课·第二框｜教材P17–18" }, { "id": "u1_q19", "type": "choice", "question": "19.（2025·贵州）面对网络谣言，正确的做法是（　　）", "options": ["A. 立即转发提醒他人", "B. 不信谣、不传谣，向平台举报", "C. 以谣制谣进行反驳", "D. 当作笑话一笑而过"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第二框｜教材P44" }, { "id": "u1_q20", "type": "choice", "question": "20.（2024·宁夏）“每人前进一小步，社会前进一大步。”这说明（　　）", "options": ["A. 社会发展与个人无关", "B. 个人行为对社会无影响", "C. 社会的存在和发展离不开每个人的努力", "D. 个人必须牺牲一切服务社会"], "answer": "C", "explanation": "", "source": "考点：第一单元·第一课·第二框｜教材P7" }, { "id": "u1_q21", "type": "choice", "question": "21.（2023·青海）下列属于网络积极作用的是（　　）<br>①促进人际交往　②推动社会进步　③传播虚假信息　④丰富生活内容", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第一框｜教材P36–37" }, { "id": "u1_q22", "type": "choice", "question": "22.（2025·海南）青少年要学会在网上传播正能量，就要（　　）<br>①践行社会主义核心价值观<br>②提高网络媒介素养<br>③多发娱乐八卦吸引流量<br>④共同培育积极健康、文明理性的网络文化", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第二框｜教材P44" }, { "id": "u1_q23", "type": "choice", "question": "23.（2024·甘肃）人的成长是不断______的过程。（　　）", "options": ["A. 脱离社会", "B. 社会化", "C. 自我封闭", "D. 追求名利"], "answer": "B", "explanation": "", "source": "考点：第一单元·第二课·第一框｜教材P14" }, { "id": "u1_q24", "type": "choice", "question": "24.（2023·内蒙古）社会化是指（　　）", "options": ["A. 个人逐渐成长为社会人的过程", "B. 个人脱离家庭走向社会", "C. 学会使用网络工具", "D. 参加工作赚钱养家"], "answer": "A", "explanation": "", "source": "考点：第一单元·第二课·第一框｜教材P14" }, { "id": "u1_q25", "type": "choice", "question": "25.（2025·新疆）网络是一把双刃剑。下列体现其“刃”的一面的是（　　）", "options": ["A. 在线学习课程", "B. 网络诈骗、隐私泄露", "C. 视频通话见亲人", "D. 网上购物便捷"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第一框｜教材P37–38" }, { "id": "u1_q26", "type": "choice", "question": "26.（2024·西藏）青少年要避免沉迷网络，应（　　）<br>①合理安排上网时间<br>②培养现实兴趣爱好<br>③完全禁止使用手机<br>④增强自我控制能力", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第二框｜教材P42" }, { "id": "u1_q27", "type": "choice", "question": "27.（2023·河北）小丽看到同学被网络欺凌，悄悄告诉老师。她的行为（　　）", "options": ["A. 多管闲事", "B. 是维护正义、关爱他人的表现", "C. 会激化矛盾", "D. 不够勇敢"], "answer": "B", "explanation": "", "source": "考点：第一单元·第二课·第二框｜教材P18" }, { "id": "u1_q28", "type": "choice", "question": "28.（2025·山西）“两耳不闻窗外事，一心只读圣贤书”在今天（　　）", "options": ["A. 仍是最佳学习方式", "B. 不利于融入社会", "C. 能保证考上重点高中", "D. 是家长普遍期望"], "answer": "B", "explanation": "", "source": "考点：第一单元·第一课·第一框｜教材P3" }, { "id": "u1_q29", "type": "choice", "question": "29.（2024·黑龙江）网络无限，自由有界。网络生活的基本准则是（　　）", "options": ["A. 随心所欲表达", "B. 恪守道德、遵守法律", "C. 只要不违法就行", "D. 匿名即可免责"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第二框｜教材P43" }, { "id": "u1_q30", "type": "choice", "question": "30.（2023·云南）亲社会行为包括（　　）<br>①谦让　②分享　③帮助他人　④关心社会发展", "options": ["A. ①②③", "B. ①②④", "C. ②③④", "D. ①②③④"], "answer": "D", "explanation": "", "source": "考点：第一单元·第二课·第二框｜教材P17" }, { "id": "u1_q31", "type": "choice", "question": "31.（2025·安徽）网络促进民主政治进步，体现在（　　）", "options": ["A. 网民可通过政府网站建言献策", "B. 网络直播带货火爆", "C. 在线游戏产业发达", "D. 社交软件用户众多"], "answer": "A", "explanation": "", "source": "考点：第一单元·第三课·第一框｜教材P37" }, { "id": "u1_q32", "type": "choice", "question": "32.（2024·湖北）下列行为中，不符合“营造清朗网络空间”的是（　　）", "options": ["A. 举报网络谣言", "B. 传播未经核实的“内部消息”", "C. 文明留言评论", "D. 不人肉搜索他人"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第二框｜教材P44" }, { "id": "u1_q33", "type": "choice", "question": "33.（2023·贵州）人的生存和发展离不开社会，这是因为（　　）<br>①社会提供物质支持　②社会提供精神滋养　③个人可以自给自足　④社会满足所有欲望", "options": ["A. ①②", "B. ①③", "C. ②④", "D. ③④"], "answer": "A", "explanation": "", "source": "考点：第一单元·第一课·第二框｜教材P7" }, { "id": "u1_q34", "type": "choice", "question": "34.（2025·江西）青少年参与社会实践的意义在于（　　）<br>①拓展视野　②提升能力　③浪费时间　④培养责任感", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "", "source": "考点：第一单元·第一课·第一框｜教材P4" }, { "id": "u1_q35", "type": "choice", "question": "35.（2024·湖南）网络谣言的危害包括（　　）<br>①扰乱社会秩序　②引发公众恐慌　③损害他人名誉　④促进信息流通", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "A", "explanation": "", "source": "考点：第一单元·第三课·第一框｜教材P38" }, { "id": "u1_q36", "type": "choice", "question": "36.（2023·山东）“花在树则生，离枝则死；鸟在林则乐，离群则悲。”说明（　　）", "options": ["A. 个人离不开社会", "B. 社会离不开个人", "C. 树比花重要", "D. 鸟喜欢热闹"], "answer": "A", "explanation": "", "source": "考点：第一单元·第一课·第二框｜教材P7" }, { "id": "u1_q37", "type": "choice", "question": "37.（2025·河南）提高媒介素养，要求我们（　　）<br>①学会辨析网络信息　②自觉抵制不良信息　③随意转发热点消息　④利用网络传播正能量", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第二框｜教材P42" }, { "id": "u1_q38", "type": "choice", "question": "38.（2024·四川）亲社会行为需要在______中养成。（　　）", "options": ["A. 虚拟网络", "B. 人际交往和社会实践", "C. 个人冥想", "D. 家庭溺爱"], "answer": "B", "explanation": "", "source": "考点：第一单元·第二课·第二框｜教材P19" }, { "id": "u1_q39", "type": "choice", "question": "39.（2023·浙江）网络让“秀才不出门，便知天下事”成为现实，说明网络（　　）", "options": ["A. 促进文化传播和科技创新", "B. 导致人际关系疏远", "C. 完全取代传统媒体", "D. 必然引发信息过载"], "answer": "A", "explanation": "", "source": "考点：第一单元·第三课·第一框｜教材P36" }, { "id": "u1_q40", "type": "choice", "question": "40.（2025·全国模拟）青少年要理性参与网络生活，就要（　　）<br>①提高媒介素养　②学会“信息节食”　③传播网络谣言　④遵守道德和法律", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "", "source": "考点：第一单元·第三课·第二框｜教材P42–43" }, { "id": "u1_q41", "type": "material", "question": "41.（2024·湖北）【材料】某校组织学生参观科技馆、博物馆，并开展“我为社区提建议”活动。<br>\n  （1）这些活动属于什么性质的行为？（2分）<br>\n  （2）参与此类活动对青少年成长有何意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）亲社会行为。（2分）<br><br>\n    （2）①有利于树立积极的生活态度；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②在实践中发展和成就自己；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③实现自己的人生价值。（2分）", "source": "考点：第一单元·第二课·第二框｜教材P17–19" }, { "id": "u1_q42", "type": "material", "question": "42.（2024·重庆）【材料】中学生小赵点击“免费领皮肤”链接，导致家长手机被盗刷5000元。<br>\n  （1）小赵遭遇了哪种网络侵害？（2分）<br>\n  （2）这一案例警示我们应如何理性参与网络生活？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）网络诈骗（或个人信息泄露）。（2分）<br><br>\n    （2）①提高媒介素养，学会辨析信息；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②增强自我保护意识，不点陌生链接；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③遵守网络道德与法律。（2分）", "source": "考点：第一单元·第三课·第二框｜教材P42–44" }, { "id": "u1_q43", "type": "material", "question": "43.（2023·江苏）【材料】小林每天刷短视频3小时以上，导致作业拖延、视力下降。父母劝说无效。<br>\n  （1）小林的问题是什么？（2分）<br>\n  （2）请从“合理利用网络”角度提出建议。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）沉迷网络，缺乏自律。（2分）<br><br>\n    （2）①学会“信息节食”，控制上网时间；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②培养阅读、运动等线下兴趣；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③请父母监督，安装防沉迷软件。（2分）", "source": "考点：第一单元·第三课·第二框｜教材P42" }, { "id": "u1_q44", "type": "material", "question": "44.（2025·广东）【材料】某中学生在社交媒体发布“某地发生地震”虚假信息，引发抢购潮。<br>\n  （1）该行为可能造成哪些危害？（2分）<br>\n  （2）青少年应如何规范网络行为？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）扰乱社会秩序、引发恐慌、损害政府公信力。（答出一点即可，2分）<br><br>\n    （2）①不制造、不传播未经核实的信息；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②恪守道德底线，不以“玩笑”为名行违法之实；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③提高媒介素养，做负责任的数字公民。（2分）", "source": "考点：第一单元·第三课·第二框｜教材P44" }, { "id": "u1_q45", "type": "material", "question": "45.（2024·北京）【材料】初中生小海发现班级微信群有人传谣，他私聊群主建议核实，并提醒同学“不信谣、不传谣”。<br>\n  （1）小海的行为体现了哪些媒介素养？（2分）<br>\n  （2）这对营造清朗网络空间有何意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）信息辨识能力、责任意识、理性表达。（2分）<br><br>\n    （2）①防止谣言扩散，维护他人权益；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②引导同伴文明上网，形成良好风气；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③青少年是网络生态的建设者。（2分）", "source": "考点：第一单元·第三课·第二框｜教材P44" }, { "id": "u1_q46", "type": "material", "question": "46.（2023·上海）【材料】小张周末参加“社区环保日”，清理垃圾、宣传分类知识。<br>\n  （1）小张的行为属于哪种亲社会行为？（2分）<br>\n  （2）这种行为对个人和社会有何意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）服务社会、热心公益。（2分）<br><br>\n    （2）①促进个人全面发展；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②营造互助友爱的社会氛围；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③推动社会文明进步。（2分）", "source": "考点：第一单元·第二课·第二框｜教材P17–18" }, { "id": "u1_q47", "type": "material", "question": "47.（2025·福建）【材料】某校门口小摊贩占道经营，学生会调查后向城管提交建议，推动划定“临时疏导区”。<br>\n  （1）学生会行使了公民的哪项权利？（2分）<br>\n  （2）这一过程体现了怎样的民主实践？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）监督权、建议权。（2分）<br><br>\n    （2）①通过合法渠道反映问题；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②在协商中寻求共识；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③青少年是民主生活的参与者。（2分）", "source": "考点：第一单元·第一课·第一框｜教材P4（社会实践）" }, { "id": "u1_q48", "type": "material", "question": "48.（2024·浙江）【材料】某中学生在境外网站发现有人以“高薪兼职”招募拍摄港口照片，他立即截图举报。<br>\n  （1）该行为维护了国家的哪方面安全？（2分）<br>\n  （2）对我们防范网络风险有何启示？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）军事安全、网络安全。（2分）<br><br>\n    （2）①警惕境外势力以“兼职”为名实施间谍活动；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②不随意拍摄、上传敏感区域照片；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③发现可疑线索立即拨打12339举报。（2分）", "source": "考点：第一单元·第三课·第二框｜教材P44（关联国家安全）" }, { "id": "u1_q49", "type": "material", "question": "49.（2023·天津）【材料】小周沉迷短视频，父母没收手机后他拒绝沟通。<br>\n  （1）小周的问题根源是什么？（2分）<br>\n  （2）请从“做负责任的人”和“合理利用网络”角度提出建议。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）缺乏自律，未履行学生责任，媒介素养低。（2分）<br><br>\n    （2）①制定作息计划，控制上网时间；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②主动与父母沟通，接受监督；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③培养健康兴趣，替代网络依赖。（2分）", "source": "考点：第一单元·第二课·第二框 + 第三课·第二框｜教材P19, P42" }, { "id": "u1_q50", "type": "material", "question": "50.（2025·山东）【材料】洪灾中，中学生小张用压岁钱买水捐给灾区，并发起“爱心接力”带动百人募捐。<br>\n  （1）小张的行为属于什么亲社会行为？（2分）<br>\n  （2）运用“服务社会”知识分析其意义。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）热心公益、关爱他人、奉献社会。（2分）<br><br>\n    （2）①体现人生价值，赢得尊重；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②利用网络放大善意，形成积极影响；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③青少年是志愿服务的重要力量。（2分）", "source": "考点：第一单元·第二课·第二框｜教材P18" }, { "id": "u1_q51", "type": "material", "question": "51.（2024·全国模拟）【材料】小林看到有人发布“中国航天全靠抄袭”，他整理官方资料理性留言回应。<br>\n  （1）小林的行为维护了国家的什么利益？（2分）<br>\n  （2）从“合理利用网络”和“国家利益”角度评析他的做法。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）国家荣誉、国家形象。（2分）<br><br>\n    （2）①用权威信息理性辟谣，体现媒介素养；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②主动捍卫国家成就，将爱国情感转化为建设性行动；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③在网络空间践行国家利益至上。（2分）", "source": "考点：第一单元·第三课·第二框｜教材P44（融合第四单元）" }, { "id": "u1_q52", "type": "material", "question": "52.（2025·情境题）你在短视频平台看到“某地发生恐怖袭击”消息，配图模糊，无官方来源。<br>\n  （1）你应如何判断信息真伪？（2分）<br>\n  （2）若转发可能违反哪些规则？（2分）<br>\n  （3）作为网民，如何共建清朗空间？（4分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）查证权威媒体、政府官网或公安通报。（2分）<br>\n    （2）违反网络管理法规、扰乱公共秩序。（2分）<br>\n    （3）①提高媒介素养，不传谣不信谣；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②传播正能量，举报不良信息。（2分）", "source": "考点：第一单元·第三课·第二框｜教材P42–44" }, { "id": "u1_q53", "type": "material", "question": "53.（2024·山西）【材料】社区设立“时间银行”，居民志愿服务可存储“时间币”兑换帮助。初中生小张每周帮独居老人买菜。<br>\n  （1）小张的行为属于哪种亲社会行为？（2分）<br>\n  （2）这种互助模式对构建和谐社会有何意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）服务社会、热心公益、关爱他人。（2分）<br><br>\n    （2）①促进邻里互助，增强社区凝聚力；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②弘扬“我为人人，人人为我”的志愿精神；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③推动形成共建共治共享的社会治理格局。（2分）", "source": "考点：第一单元·第二课·第二框｜教材P18" }, { "id": "u1_q54", "type": "material", "question": "54.（2023·海南）【材料】台风前，社区组织应急演练。初中生小海报名成为“少年应急队员”，协助张贴通知、检查楼道杂物。<br>\n  （1）小海的行为体现了什么责任意识？（2分）<br>\n  （2）参与公共安全事务对青少年成长有何意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）社会责任感、公共安全意识。（2分）<br><br>\n    （2）①增强风险防范和自救互救能力；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②在实践中培养担当精神；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③理解“安全人人有责”，筑牢防线。（2分）", "source": "考点：第一单元·第二课·第二框｜教材P19" }, { "id": "u1_q55", "type": "material", "question": "55.（2025·云南）【材料】边境护边员岩龙30年巡边护界碑。他说：“界碑在哪，国土就在哪。”<br>\n  （1）岩龙的行为体现了怎样的国家观念？（2分）<br>\n  （2）他的事迹对我们理解“国家利益与人民利益关系”有何启示？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）国家利益至上、国土安全意识。（2分）<br><br>\n    （2）①国家利益是人民利益的集中体现；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②人民是维护国家利益的主体；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③国家富强与人民幸福高度统一。（2分）", "source": "考点：第一单元·第一课·第一框（社会实践中的国家认同）" }, { "id": "u1_q56", "type": "material", "question": "56.（2024·河北）【材料】学生会调查校门口小摊问题，向城管提交建议，推动划定“临时疏导区”。<br>\n  （1）学生会行使了公民的哪项权利？（2分）<br>\n  （2）这一过程体现了怎样的民主实践？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）监督权、建议权。（2分）<br><br>\n    （2）①通过合法渠道反映问题；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②在协商中寻求共识；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③青少年是民主生活的参与者。（2分）", "source": "考点：第一单元·第一课·第一框｜教材P4" }, { "id": "u1_q57", "type": "material", "question": "57.（2023·江西）【材料】小周沉迷短视频，每天刷3小时以上，导致视力下降、作业拖拉。<br>\n  （1）小周的问题根源是什么？（2分）<br>\n  （2）请从“做负责任的人”和“合理利用网络”角度提出建议。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）缺乏自律，未履行学生责任。（2分）<br><br>\n    （2）①制定计划，控制上网时间；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②主动沟通，接受监督；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③培养健康兴趣，替代依赖。（2分）", "source": "考点：第一单元·第三课·第二框｜教材P42" }, { "id": "u1_q58", "type": "material", "question": "58.（2025·四川）【材料】科研团队突破芯片技术，成员平均年龄32岁。青年工程师说：“国家需要什么，我们就研究什么。”<br>\n  （1）该团队践行了怎样的价值观？（2分）<br>\n  （2）这对青少年规划人生有何启示？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）国家利益至上、科技报国。（2分）<br><br>\n    （2）①将个人理想融入国家发展；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②努力学习科学文化知识；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③选择职业考虑国家需要。（2分）", "source": "考点：第一单元·第一课·第一框（社会实践与国家需要）" }, { "id": "u1_q59", "type": "material", "question": "59.（2024·安徽）【材料】中学生在烈士陵园劝阻他人嬉闹攀爬雕像：“这里不是游乐场，请尊重英烈。”<br>\n  （1）该同学维护了英烈的什么权利？（2分）<br>\n  （2）从“社会公德”和“规则意识”角度评析他的行为。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）人格尊严权、社会尊崇。（2分）<br><br>\n    （2）①遵守公共场所文明规则；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②体现良好社会公德；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③敢于制止不文明行为，有担当。（2分）", "source": "考点：第一单元·第二课·第二框｜教材P18（关爱社会、遵守公德）" }, { "id": "u1_q60", "type": "material", "question": "60.（2023·河南）【材料】小敏发现班级微信群传谣，她私聊群主建议核实，并提醒同学“不信谣、不传谣”。<br>\n  （1）小敏的行为体现了哪些媒介素养？（2分）<br>\n  （2）这一做法对营造清朗网络空间有何意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）信息辨识能力、责任意识。（2分）<br><br>\n    （2）①防止谣言扩散；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②引导同伴文明上网；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③青少年是网络生态建设者。（2分）", "source": "考点：第一单元·第三课·第二框｜教材P44" }, { "id": "u1_q61", "type": "material", "question": "61.（2025·陕西）【材料】维吾尔族学生阿依古丽用普通话朗诵《岳阳楼记》，获中华文化经典诵读一等奖。<br>\n  （1）她的言行体现了怎样的民族观？（2分）<br>\n  （2）青少年应如何铸牢中华民族共同体意识？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）中华民族一家亲、文化认同。（2分）<br><br>\n    （2）①学习国家通用语言文字；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②尊重各民族文化，认同中华文化；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③反对分裂，维护团结。（2分）", "source": "考点：第一单元·第一课·第二框（社会中的文化认同）" }, { "id": "u1_q62", "type": "material", "question": "62.（2024·江苏）【材料】家长发现校园餐食材过期，立即举报促使整改。<br>\n  （1）该家长行使了什么权利？（2分）<br>\n  （2）从“规则与秩序”角度分析此类监督机制的价值。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）监督权。（2分）<br><br>\n    （2）①监督保障规则落实；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②促进依法办学，保障学生权益；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③构建“家校社”协同治理机制。（2分）", "source": "考点：第一单元·第一课·第一框（社会实践中的规则意识）" }] }, { "id": "u2", "title": "第二单元 维护社会秩序（2024新版）", "questions": [{ "id": "u2_q1", "type": "choice", "question": "1.（2025·新课标）社会秩序是人民安居乐业的保障。维护社会秩序主要依靠（　　）", "options": ["A. 个人自觉", "B. 道德感化", "C. 规则约束", "D. 舆论压力"], "answer": "C", "explanation": "教材明确指出“维护秩序靠规则”，规则包括纪律、道德、法律等。", "source": "考点：第二单元·第四课·第一框｜教材P46" }, { "id": "u2_q2", "type": "choice", "question": "2.（2024·北京）下列属于社会规则的是（　　）<br>①交通信号灯　②校规校纪　③“老吾老以及人之老”　④刑法", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ①②③④"], "answer": "D", "explanation": "规则包括法律、纪律、道德等，四项分别对应法律、纪律、道德、法律。", "source": "考点：第二单元·第四课·第一框｜教材P47" }, { "id": "u2_q3", "type": "choice", "question": "3.（2023·重庆）“不以规矩，不能成方圆。”这说明（　　）", "options": ["A. 规则限制自由，应尽量减少", "B. 社会生活离不开规则", "C. 只有法律才是有效规则", "D. 规则是成年人制定的"], "answer": "B", "explanation": "", "source": "考点：第二单元·第四课·第一框｜教材P46" }, { "id": "u2_q4", "type": "choice", "question": "4.（2025·浙江）遵守社会规则，需要（　　）", "options": ["A. 仅靠他律", "B. 仅靠自律", "C. 他律和自律相结合", "D. 看是否有监督"], "answer": "C", "explanation": "教材强调“遵守规则需要他律和自律”。", "source": "考点：第二单元·第四课·第二框｜教材P50" }, { "id": "u2_q5", "type": "choice", "question": "5.（2024·江苏）小明看到无人值守的自助售货机，仍主动扫码付款。这体现（　　）", "options": ["A. 他律的作用", "B. 自律的品质", "C. 法律的强制", "D. 道德的缺失"], "answer": "B", "explanation": "", "source": "考点：第二单元·第四课·第二框｜教材P50" }, { "id": "u2_q6", "type": "choice", "question": "6.（2023·广东）“良言一句三冬暖，恶语伤人六月寒。”这启示我们在交往中要（　　）", "options": ["A. 诚实守信", "B. 文明有礼", "C. 友善待人", "D. 遵守法律"], "answer": "B", "explanation": "强调语言文明，属于“文明有礼”范畴。", "source": "考点：第二单元·第五课·第一框｜教材P54" }, { "id": "u2_q7", "type": "choice", "question": "7.（2025·山东）下列行为符合“文明有礼”的是（　　）", "options": ["A. 在公交车上大声外放视频", "B. 排队时插队“赶时间”", "C. 进老师办公室先敲门", "D. 对服务员呼来喝去"], "answer": "C", "explanation": "", "source": "考点：第二单元·第五课·第一框｜教材P55" }, { "id": "u2_q8", "type": "choice", "question": "8.（2024·河南）诚信是一个人安身立命之本。下列体现诚信的是（　　）", "options": ["A. 考试时偷偷看同桌答案", "B. 捡到手机主动归还失主", "C. 为朋友隐瞒违纪事实", "D. 网购后恶意差评索要赔偿"], "answer": "B", "explanation": "", "source": "考点：第二单元·第五课·第二框｜教材P58" }, { "id": "u2_q9", "type": "choice", "question": "9.（2023·四川）“人而无信，不知其可也。”这说明诚信（　　）", "options": ["A. 是企业的无形资产", "B. 是个人立身之本", "C. 能促进社会文明", "D. 是国家治理基石"], "answer": "B", "explanation": "", "source": "考点：第二单元·第五课·第二框｜教材P58" }, { "id": "u2_q10", "type": "choice", "question": "10.（2025·福建）友善待人要求我们（　　）<br>①换位思考　②理解宽容　③斤斤计较　④乐于助人", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "", "source": "考点：第二单元·第五课·第三框｜教材P61" }, { "id": "u2_q11", "type": "choice", "question": "11.（2024·湖北）小华看到同学被孤立，主动邀请他一起打球。这体现（　　）", "options": ["A. 文明有礼", "B. 诚实守信", "C. 友善待人", "D. 遵守规则"], "answer": "C", "explanation": "", "source": "考点：第二单元·第五课·第三框｜教材P61" }, { "id": "u2_q12", "type": "choice", "question": "12.（2023·陕西）法治是治国理政的基本方式。树立法治理念，首先要（　　）", "options": ["A. 学会打官司", "B. 尊崇法律", "C. 背诵法条", "D. 监督政府"], "answer": "B", "explanation": "教材强调“尊法”是法治理念的核心起点。", "source": "考点：第二单元·第六课·第一框｜教材P64" }, { "id": "u2_q13", "type": "choice", "question": "13.（2025·天津）下列体现“树立法治理念”的是（　　）", "options": ["A. 认为“关系比法律好用”", "B. 遇事找法、解决问题靠法", "C. 觉得法律只约束坏人", "D. 用暴力解决同学矛盾"], "answer": "B", "explanation": "", "source": "考点：第二单元·第六课·第一框｜教材P65" }, { "id": "u2_q14", "type": "choice", "question": "14.（2024·湖南）当合法权益受到侵害时，青少年应首先考虑（　　）", "options": ["A. 私下报复", "B. 忍气吞声", "C. 寻求法律帮助", "D. 网络曝光"], "answer": "C", "explanation": "", "source": "考点：第二单元·第六课·第二框｜教材P68" }, { "id": "u2_q15", "type": "choice", "question": "15.（2023·江西）“国无法不治，民无法不立。”这强调（　　）", "options": ["A. 法律由国家制定", "B. 法律面前人人平等", "C. 公民必须依法办事", "D. 法律具有强制性"], "answer": "C", "explanation": "", "source": "考点：第二单元·第六课·第二框｜教材P67" }, { "id": "u2_q16", "type": "choice", "question": "16.（2025·辽宁）社会规则划定了自由的边界。这说明（　　）", "options": ["A. 规则剥夺自由", "B. 自由是绝对的", "C. 自由受规则约束", "D. 规则可有可无"], "answer": "C", "explanation": "", "source": "考点：第二单元·第四课·第二框｜教材P49" }, { "id": "u2_q17", "type": "choice", "question": "17.（2024·吉林）疫情期间，市民自觉排队做核酸。这体现（　　）", "options": ["A. 他律的作用", "B. 自律与规则意识", "C. 法律强制力", "D. 道德感化"], "answer": "B", "explanation": "", "source": "考点：第二单元·第四课·第二框｜教材P50" }, { "id": "u2_q18", "type": "choice", "question": "18.（2023·广西）“彬彬有礼，然后君子也。”说明（　　）", "options": ["A. 礼貌是虚伪表现", "B. 文明有礼体现个人修养", "C. 礼仪只在正式场合需要", "D. 礼貌浪费时间"], "answer": "B", "explanation": "", "source": "考点：第二单元·第五课·第一框｜教材P54" }, { "id": "u2_q19", "type": "choice", "question": "19.（2025·贵州）企业因虚假宣传被罚款50万元。这说明（　　）", "options": ["A. 诚信是企业的无形资产", "B. 不诚信必受刑罚", "C. 市场不需要诚信", "D. 罚款能解决所有问题"], "answer": "A", "explanation": "", "source": "考点：第二单元·第五课·第二框｜教材P59" }, { "id": "u2_q20", "type": "choice", "question": "20.（2024·宁夏）友善待人要做到（　　）", "options": ["A. 只对朋友友善", "B. 平等对待他人", "C. 以牙还牙", "D. 讨好所有人"], "answer": "B", "explanation": "", "source": "考点：第二单元·第五课·第三框｜教材P61" }, { "id": "u2_q21", "type": "choice", "question": "21.（2023·青海）法治要求（　　）", "options": ["A. 人治优先", "B. 法律至上", "C. 领导说了算", "D. 民意代替法律"], "answer": "B", "explanation": "", "source": "考点：第二单元·第六课·第一框｜教材P64" }, { "id": "u2_q22", "type": "choice", "question": "22.（2025·海南）学会依法办事，就要（　　）<br>①遵守法律法规　②通过法治方式表达诉求　③养成学法尊法守法用法习惯　④认为法律与自己无关", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "A", "explanation": "", "source": "考点：第二单元·第六课·第二框｜教材P67–68" }, { "id": "u2_q23", "type": "choice", "question": "23.（2024·甘肃）规则不是一成不变的。当规则不合理时，我们应（　　）", "options": ["A. 拒绝遵守", "B. 积极改进规则", "C. 暗中破坏", "D. 无视存在"], "answer": "B", "explanation": "", "source": "考点：第二单元·第四课·第二框｜教材P51" }, { "id": "u2_q24", "type": "choice", "question": "24.（2023·内蒙古）下列属于“文明有礼”表现的是（　　）", "options": ["A. 公共场所大声喧哗", "B. 随地吐痰", "C. 使用礼貌用语", "D. 插队抢座"], "answer": "C", "explanation": "", "source": "考点：第二单元·第五课·第一框｜教材P55" }, { "id": "u2_q25", "type": "choice", "question": "25.（2025·新疆）“诚信考场”无人监考，学生自觉答题。这体现（　　）", "options": ["A. 他律有效", "B. 自律与诚信", "C. 考试形式主义", "D. 法律强制"], "answer": "B", "explanation": "", "source": "考点：第二单元·第五课·第二框｜教材P58" }, { "id": "u2_q26", "type": "choice", "question": "26.（2024·西藏）看到老人摔倒，小张立即扶起并拨打120。这体现（　　）", "options": ["A. 文明有礼", "B. 诚实守信", "C. 友善待人", "D. 遵守规则"], "answer": "C", "explanation": "", "source": "考点：第二单元·第五课·第三框｜教材P61" }, { "id": "u2_q27", "type": "choice", "question": "27.（2023·河北）树立法治理念，要求我们（　　）", "options": ["A. 把法律当工具", "B. 内心尊崇法律", "C. 只在犯错时学法", "D. 认为法律管不了小事"], "answer": "B", "explanation": "", "source": "考点：第二单元·第六课·第一框｜教材P65" }, { "id": "u2_q28", "type": "choice", "question": "28.（2025·山西）遭遇校园欺凌，正确的做法是（　　）", "options": ["A. 默默忍受", "B. 找人报复", "C. 向老师或公安机关求助", "D. 网络曝光对方隐私"], "answer": "C", "explanation": "", "source": "考点：第二单元·第六课·第二框｜教材P68" }, { "id": "u2_q29", "type": "choice", "question": "29.（2024·黑龙江）社会规则保障社会秩序的实现，其中最刚性的规则是（　　）", "options": ["A. 道德", "B. 纪律", "C. 法律", "D. 习俗"], "answer": "C", "explanation": "", "source": "考点：第二单元·第四课·第一框｜教材P47" }, { "id": "u2_q30", "type": "choice", "question": "30.（2023·云南）“敬人者，人恒敬之。”说明尊重是（　　）", "options": ["A. 单向的", "B. 相互的", "C. 强制的", "D. 有条件的"], "answer": "B", "explanation": "", "source": "考点：第二单元·第五课·第一框｜教材P54（文明有礼包含尊重）" }, { "id": "u2_q31", "type": "choice", "question": "31.（2025·安徽）下列行为违背“诚实守信”的是（　　）", "options": ["A. 如实填写健康信息", "B. 拾金不昧", "C. 考试作弊", "D. 履行承诺"], "answer": "C", "explanation": "", "source": "考点：第二单元·第五课·第二框｜教材P58" }, { "id": "u2_q32", "type": "choice", "question": "32.（2024·湖北）友善待人需要（　　）", "options": ["A. 区别对待", "B. 平等、包容、互助", "C. 讲哥们义气", "D. 一味迁就"], "answer": "B", "explanation": "", "source": "考点：第二单元·第五课·第三框｜教材P61" }, { "id": "u2_q33", "type": "choice", "question": "33.（2023·贵州）法治社会里，公民应（　　）", "options": ["A. 只享受权利", "B. 权利义务统一", "C. 法律只约束他人", "D. 可以违法只要不被抓"], "answer": "B", "explanation": "", "source": "考点：第二单元·第六课·第二框｜教材P67" }, { "id": "u2_q34", "type": "choice", "question": "34.（2025·江西）规则需要大家共同遵守，因为（　　）", "options": ["A. 规则是领导制定的", "B. 社会正常运行需要秩序", "C. 不遵守会被罚款", "D. 大家都怕惩罚"], "answer": "B", "explanation": "", "source": "考点：第二单元·第四课·第一框｜教材P46" }, { "id": "u2_q35", "type": "choice", "question": "35.（2024·湖南）文明有礼的作用包括（　　）<br>①促进社会和谐　②体现国家形象　③赢得他人尊重　④保证事业成功", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "A", "explanation": "", "source": "考点：第二单元·第五课·第一框｜教材P56" }, { "id": "u2_q36", "type": "choice", "question": "36.（2023·山东）“人无忠信，不可立于世。”强调（　　）", "options": ["A. 忠诚比能力重要", "B. 诚信是立身之本", "C. 信任他人即可", "D. 社会不需要诚信"], "answer": "B", "explanation": "", "source": "考点：第二单元·第五课·第二框｜教材P58" }, { "id": "u2_q37", "type": "choice", "question": "37.（2025·河南）提升法治素养，青少年要（　　）", "options": ["A. 只在课堂学法", "B. 将法律内化于心、外化于行", "C. 认为法律离自己很远", "D. 用法律压制他人"], "answer": "B", "explanation": "", "source": "考点：第二单元·第六课·第二框｜教材P68" }, { "id": "u2_q38", "type": "choice", "question": "38.（2024·全国模拟）社会生活讲道德与遵守规则的关系是（　　）", "options": ["A. 道德高于法律", "B. 规则排斥道德", "C. 德治与法治相辅相成", "D. 道德可替代法律"], "answer": "C", "explanation": "本单元强调“维护社会秩序”需道德与法治协同发力。", "source": "考点：第二单元整体逻辑｜教材P46–68" }, { "id": "u2_q39", "type": "material", "question": "39.（2024·北京）【材料】地铁站内，乘客自觉排队安检，无人插队；车厢内，无人饮食、大声喧哗。<br>\n  （1）这些行为体现了对哪些社会规则的遵守？（2分）<br>\n  （2）为什么社会生活需要规则？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）公共秩序规则、文明公约（或道德规范）。（2分）<br><br>\n    （2）①社会规则明确社会秩序内容；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②保障社会秩序实现；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③营造有序、安全、和谐的社会环境。（2分）", "source": "考点：第二单元·第四课·第一框｜教材P46–47" }, { "id": "u2_q40", "type": "material", "question": "40.（2023·上海）【材料】小林发现学校附近盲道被摊贩占用，拍照后通过“12345”平台举报，问题迅速解决。<br>\n  （1）小林的行为体现了什么规则意识？（2分）<br>\n  （2）从“遵守规则”角度，谈谈青少年如何参与社会治理。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）主动维护规则、积极参与改进规则。（2分）<br><br>\n    （2）①自觉遵守规则；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②提醒、监督他人守规则；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③通过合法渠道建言献策，推动规则完善。（2分）", "source": "考点：第二单元·第四课·第二框｜教材P51" }, { "id": "u2_q41", "type": "material", "question": "41.（2025·广东）【材料】某餐厅推行“光盘打卡”，顾客晒空盘可享折扣。许多学生积极参与。<br>\n  （1）这一做法体现了哪一道德要求？（2分）<br>\n  （2）文明有礼对个人和社会有何意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）文明有礼（或勤俭节约、尊重劳动成果）。（2分）<br><br>\n    （2）①提升个人修养和形象；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②促进社会和谐；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③展现国家文明形象。（2分）", "source": "考点：第二单元·第五课·第一框｜教材P56" }, { "id": "u2_q42", "type": "material", "question": "42.（2024·浙江）【材料】中学生小王网购收到假货，商家拒绝退货。他收集证据向市场监管部门投诉，最终维权成功。<br>\n  （1）小王的做法体现了什么法治素养？（2分）<br>\n  （2）青少年应如何“学会依法办事”？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）依法维权、运用法律武器保护自己。（2分）<br><br>\n    （2）①遵守法律法规；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②通过法治方式表达诉求；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③养成学法尊法守法用法的习惯。（2分）", "source": "考点：第二单元·第六课·第二框｜教材P68" }, { "id": "u2_q43", "type": "material", "question": "43.（2023·天津）【材料】考试前，好友请求小张传纸条。小张拒绝并说：“诚信比分数更重要。”<br>\n  （1）小张践行了哪一道德准则？（2分）<br>\n  （2）为什么说“诚信是一个人安身立命之本”？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）诚实守信。（2分）<br><br>\n    （2）①诚信是融入社会的“通行证”；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②赢得他人信任和尊重；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③不讲诚信难以在社会立足。（2分）", "source": "考点：第二单元·第五课·第二框｜教材P58" }, { "id": "u2_q44", "type": "material", "question": "44.（2025·山东）【材料】社区设立“邻里互助角”，居民捐赠闲置物品供有需要者取用，无人看管但秩序井然。<br>\n  （1）这体现了哪些道德品质？（2分）<br>\n  （2）友善待人对构建和谐社会有何作用？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）友善、诚信、互助。（2分）<br><br>\n    （2）①增进人际信任；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②减少矛盾冲突；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③形成守望相助的良好风尚。（2分）", "source": "考点：第二单元·第五课·第三框｜教材P61" }, { "id": "u2_q45", "type": "material", "question": "45.（2024·福建）【材料】某市出台《文明行为促进条例》，对乱扔垃圾、公共场所吸烟等行为进行约束。<br>\n  （1）该条例属于哪种社会规则？（2分）<br>\n  （2）从“规则与自由”关系角度，评析此类立法。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）法律（地方性法规）。（2分）<br><br>\n    （2）①自由不是随心所欲，受规则约束；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②规则划定自由边界，保障多数人自由；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③法治既规范自由，又保障自由。（2分）", "source": "考点：第二单元·第四课·第二框｜教材P49" }, { "id": "u2_q46", "type": "material", "question": "46.（2023·河南）【材料】小李看到网络谣言“某疫苗有害”，查证官方通报后，在评论区留言辟谣。<br>\n  （1）小李的行为体现了哪些素养？（2分）<br>\n  （2）从“道德”与“法治”角度，分析如何应对网络谣言。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）诚信（不传谣）、法治意识（依法上网）。（2分）<br><br>\n    （2）①道德层面：恪守诚信，不制造传播虚假信息；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②法治层面：遵守网络安全法，举报谣言；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③提升媒介素养，理性辨识信息。（2分）", "source": "考点：第二单元·第五课·第二框 + 第六课·第二框｜教材P59, P68" }, { "id": "u2_q47", "type": "material", "question": "47.（2025·情境题）你在图书馆看到同学偷拿书签作纪念。<br>\n  （1）这种行为违反了哪些规则？（2分）<br>\n  （2）作为朋友，你该如何劝说？（4分）<br>\n  （3）从“自律与他律”角度，谈如何杜绝此类行为。（2分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）图书馆规定（纪律）、诚信道德、可能涉及法律（若价值高）。（2分）<br>\n    （2）①“公共财物属于大家，拿走会影响他人使用”；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②“诚信是做人的根本，小事也不能放松”。（2分）<br>\n    （3）①加强自律，内心敬畏规则；（1分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②完善他律，如安装监控、加强管理。（1分）", "source": "考点：第二单元·第四课·第二框｜教材P50" }, { "id": "u2_q48", "type": "material", "question": "48.（2024·全国模拟）【材料】某校开展“诚信考场”，全程无人监考，学生自觉遵守考纪。<br>\n  （1）“诚信考场”体现了哪两个层面的规则？（2分）<br>\n  （2）这对青少年成长有何教育意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）道德规则（诚信）、纪律规则（考场纪律）。（2分）<br><br>\n    （2）①强化诚信意识；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②培养自律精神；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③体验“德治”与“自治”的力量。（2分）", "source": "考点：第二单元·第五课·第二框｜教材P58" }, { "id": "u2_q49", "type": "material", "question": "49.（2023·江苏）【材料】老人摔倒无人敢扶。小陈上前搀扶并拨打120，后被家属感谢。<br>\n  （1）小陈的行为体现了什么道德品质？（2分）<br>\n  （2）社会应如何鼓励此类友善行为？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）友善待人、关爱他人、见义勇为。（2分）<br><br>\n    （2）①立法保护善意救助者（如“好人法”）；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②媒体宣传正能量；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③学校加强道德教育。（2分）", "source": "考点：第二单元·第五课·第三框｜教材P61" }, { "id": "u2_q50", "type": "material", "question": "50.（2025·陕西）【材料】中学生小赵发现校园周边有非法网吧接纳未成年人，向文化执法部门举报。<br>\n  （1）小赵行使了什么权利？（2分）<br>\n  （2）从“法治素养”角度，分析他的行为价值。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）监督权。（2分）<br><br>\n    （2）①体现尊法守法意识；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②依法维护未成年人权益；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③推动法治社会建设。（2分）", "source": "考点：第二单元·第六课·第二框｜教材P68" }, { "id": "u2_q51", "type": "material", "question": "51.（2024·湖北）【材料】高铁上，一男子霸座拒不让座，被乘警依法处理并列入失信名单。<br>\n  （1）该男子违反了哪些规则？（2分）<br>\n  （2）此案例说明规则与自由的关系是什么？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）铁路运输规定（纪律）、社会公德、法律（治安管理处罚法）。（2分）<br><br>\n    （2）①自由受社会规则约束；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②违反规则、扰乱秩序应受相应处罚；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③规则保障每个人合法自由和权利。（2分）", "source": "考点：第二单元·第四课·第二框｜教材P49" }, { "id": "u2_q52", "type": "material", "question": "52.（2023·四川）【材料】班级评选“文明之星”，小美因常帮同学、礼貌待人当选。<br>\n  （1）小美的行为体现了哪些文明礼仪？（2分）<br>\n  （2）青少年应如何践行“文明有礼”？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）态度谦和、用语文明、举止端庄、乐于助人。（2分）<br><br>\n    （2）①从小事做起，注重细节；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②影响带动身边人；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③参加文明实践活动。（2分）", "source": "考点：第二单元·第五课·第一框｜教材P55–56" }, { "id": "u2_q53", "type": "material", "question": "53.（2025·云南）【材料】某电商平台因刷单造假被行政处罚。负责人称：“没想到后果这么严重。”<br>\n  （1）该企业违背了哪一道德准则？（2分）<br>\n  （2）从“诚信”与“法治”角度，谈谈企业经营之道。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）诚实守信。（2分）<br><br>\n    （2）①诚信是企业无形资产，能赢得客户；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②必须遵守市场法律法规；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③德治与法治结合才能长远发展。（2分）", "source": "考点：第二单元·第五课·第二框 + 第六课·第一框｜教材P59, P64" }, { "id": "u2_q54", "type": "material", "question": "54.（2024·安徽）【材料】社区组织“楼道堆物清理日”，居民自觉清理杂物，通道畅通。<br>\n  （1）这体现了居民对哪些规则的遵守？（2分）<br>\n  （2）从“自律与他律”角度，分析活动成功原因。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）社区公约（道德）、消防法规（法律）。（2分）<br><br>\n    （2）①他律：社区组织动员、宣传教育；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②自律：居民自觉维护公共安全；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③两者结合促成良好秩序。（2分）", "source": "考点：第二单元·第四课·第二框｜教材P50" }, { "id": "u2_q55", "type": "material", "question": "55.（2023·江西）【材料】小周捡到钱包，根据身份证信息找到失主归还。<br>\n  （1）小周的行为体现了什么品质？（2分）<br>\n  （2）这种行为对社会风气有何影响？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）诚实守信、拾金不昧。（2分）<br><br>\n    （2）①弘扬诚信美德；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②增强社会互信；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③推动形成向上向善的社会氛围。（2分）", "source": "考点：第二单元·第五课·第二框｜教材P58" }, { "id": "u2_q56", "type": "material", "question": "56.（2025·辽宁）【材料】某市将“文明行为”纳入学生综合素质评价。<br>\n  （1）此举旨在强化学生的什么意识？（2分）<br>\n  （2）从“社会生活讲道德”角度，分析其意义。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）文明有礼、诚实守信、友善待人的道德意识。（2分）<br><br>\n    （2）①引导青少年重视日常道德实践；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②促进知行合一；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③夯实社会文明根基。（2分）", "source": "考点：第二单元·第五课整体｜教材P54–61" }, { "id": "u2_q57", "type": "material", "question": "57.（2024·重庆）【材料】初中生小杨发现有人散布“地震谣言”，立即向网信部门举报。<br>\n  （1）小杨的行为体现了哪些法治素养？（2分）<br>\n  （2）青少年应如何在网络空间“学会依法办事”？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）依法维权、履行公民义务、维护网络安全。（2分）<br><br>\n    （2）①遵守网络法律法规；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②不传播违法不良信息；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③积极举报网络违法行为。（2分）", "source": "考点：第二单元·第六课·第二框｜教材P68" }, { "id": "u2_q58", "type": "material", "question": "58.（2023·全国）【综合】请结合本单元知识，谈谈如何“共建有序、文明、法治的社会”。（8分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    ①遵守社会规则（纪律、道德、法律），维护秩序；（2分）<br>\n    ②践行文明有礼、诚实守信、友善待人等道德要求；（2分）<br>\n    ③树立法治理念，尊法学法守法用法；（2分）<br>\n    ④从自身做起，影响他人，共同营造良好社会风尚。（2分）", "source": "考点：第二单元整体｜教材P46–68" }] }, { "id": "u3", "title": "第三单元 勇担社会责任（2024新版）", "questions": [{ "id": "u3_q1", "type": "choice", "question": "1.（2025·新课标）自由不是随心所欲，它受（　　）约束。", "options": ["A. 个人喜好", "B. 社会规则", "C. 家庭意愿", "D. 朋友建议"], "answer": "B", "explanation": "教材明确指出“自由受道德、纪律、法律等社会规则约束”。", "source": "考点：第三单元·第七课·第一框｜教材P72" }, { "id": "u3_q2", "type": "choice", "question": "2.（2024·北京）珍视自由，就要（　　）", "options": ["A. 想做什么就做什么", "B. 依法行使权利", "C. 只享受自由不担责任", "D. 抵制一切规则"], "answer": "B", "explanation": "", "source": "考点：第三单元·第七课·第一框｜教材P73" }, { "id": "u3_q3", "type": "choice", "question": "3.（2023·重庆）“海阔凭鱼跃，天高任鸟飞。”但鱼不能离水，鸟不能无空。这说明（　　）", "options": ["A. 自由是虚幻的", "B. 自由是有条件的", "C. 规则剥夺自由", "D. 自然界才有真自由"], "answer": "B", "explanation": "", "source": "考点：第三单元·第七课·第一框｜教材P72" }, { "id": "u3_q4", "type": "choice", "question": "4.（2025·浙江）下列体现“践行平等”的是（　　）", "options": ["A. 招聘时限定“男性优先”", "B. 农民工子女无法入学", "C. 公共场所设无障碍通道", "D. 富人可插队就医"], "answer": "C", "explanation": "无障碍设施保障残障人士平等权利。", "source": "考点：第三单元·第七课·第二框｜教材P76" }, { "id": "u3_q5", "type": "choice", "question": "5.（2024·江苏）反对特权、抵制歧视，是践行平等的（　　）", "options": ["A. 根本目标", "B. 重要表现", "C. 法律底线", "D. 道德幻想"], "answer": "B", "explanation": "", "source": "考点：第三单元·第七课·第二框｜教材P77" }, { "id": "u3_q6", "type": "choice", "question": "6.（2023·广东）公平通常指（　　）", "options": ["A. 绝对平均", "B. 基于一定标准的合理对待", "C. 强者多得", "D. 政府分配"], "answer": "B", "explanation": "", "source": "考点：第三单元·第八课·第一框｜教材P80" }, { "id": "u3_q7", "type": "choice", "question": "7.（2025·山东）学校评优采用“量化积分+民主评议”，这体现了（　　）", "options": ["A. 机会公平", "B. 规则公平", "C. 结果公平", "D. 财富公平"], "answer": "B", "explanation": "", "source": "考点：第三单元·第八课·第一框｜教材P80" }, { "id": "u3_q8", "type": "choice", "question": "8.（2024·河南）坚守公平，需要（　　）<br>①制度保障　②个人维护　③牺牲效率　④人人参与", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "B", "explanation": "", "source": "考点：第三单元·第八课·第一框｜教材P82" }, { "id": "u3_q9", "type": "choice", "question": "9.（2023·四川）正义行为是指（　　）", "options": ["A. 对自己有利的事", "B. 促进社会进步、维护公共利益的行为", "C. 多数人支持的事", "D. 不违反法律即可"], "answer": "B", "explanation": "", "source": "考点：第三单元·第八课·第二框｜教材P84" }, { "id": "u3_q10", "type": "choice", "question": "10.（2025·福建）看到校园欺凌，小张立即报告老师。这属于（　　）", "options": ["A. 多管闲事", "B. 守护正义", "C. 违反纪律", "D. 缺乏勇气"], "answer": "B", "explanation": "", "source": "考点：第三单元·第八课·第二框｜教材P86" }, { "id": "u3_q11", "type": "choice", "question": "11.（2024·湖北）守护正义需要（　　）", "options": ["A. 以暴制暴", "B. 讲究策略、见义“智”为", "C. 默默忍受", "D. 网络曝光"], "answer": "B", "explanation": "", "source": "考点：第三单元·第八课·第二框｜教材P86" }, { "id": "u3_q12", "type": "choice", "question": "12.（2023·陕西）社会责任感的集中体现是（　　）", "options": ["A. 努力学习", "B. 关爱他人、服务社会", "C. 听父母话", "D. 遵守校规"], "answer": "B", "explanation": "", "source": "考点：第三单元·第九课·第一框｜教材P89" }, { "id": "u3_q13", "type": "choice", "question": "13.（2025·天津）下列属于承担社会责任的是（　　）", "options": ["A. 考试作弊提高成绩", "B. 参加社区志愿服务", "C. 在网上辱骂他人", "D. 逃课去打游戏"], "answer": "B", "explanation": "", "source": "考点：第三单元·第九课·第一框｜教材P89" }, { "id": "u3_q14", "type": "choice", "question": "14.（2024·湖南）奉献社会，青少年可以（　　）", "options": ["A. 等长大再做", "B. 从身边小事做起", "C. 必须捐钱捐物", "D. 只参加学校组织活动"], "answer": "B", "explanation": "", "source": "考点：第三单元·第九课·第二框｜教材P92" }, { "id": "u3_q15", "type": "choice", "question": "15.（2023·江西）“赠人玫瑰，手有余香”说明（　　）", "options": ["A. 奉献是吃亏", "B. 帮助他人也提升自己", "C. 玫瑰很香", "D. 社会不需要奉献"], "answer": "B", "explanation": "", "source": "考点：第三单元·第九课·第二框｜教材P92" }, { "id": "u3_q16", "type": "choice", "question": "16.（2025·辽宁）自由与法治的关系是（　　）", "options": ["A. 法治限制自由", "B. 法治规范并保障自由", "C. 自由高于法律", "D. 二者对立"], "answer": "B", "explanation": "", "source": "考点：第三单元·第七课·第一框｜教材P73" }, { "id": "u3_q17", "type": "choice", "question": "17.（2024·吉林）某公司招聘拒收女性简历。这违背了（　　）", "options": ["A. 自由原则", "B. 平等原则", "C. 公平原则", "D. 正义原则"], "answer": "B", "explanation": "", "source": "考点：第三单元·第七课·第二框｜教材P76" }, { "id": "u3_q18", "type": "choice", "question": "18.（2023·广西）教育均衡发展政策主要维护（　　）", "options": ["A. 机会公平", "B. 财富公平", "C. 结果公平", "D. 权力公平"], "answer": "A", "explanation": "", "source": "考点：第三单元·第八课·第一框｜教材P81" }, { "id": "u3_q19", "type": "choice", "question": "19.（2025·贵州）司法机关纠正冤假错案，体现（　　）", "options": ["A. 程序正义", "B. 实体正义", "C. 两者兼有", "D. 浪费资源"], "answer": "C", "explanation": "", "source": "考点：第三单元·第八课·第二框｜教材P85" }, { "id": "u3_q20", "type": "choice", "question": "20.（2024·宁夏）小李周末到敬老院陪老人聊天。这属于（　　）", "options": ["A. 履行法定义务", "B. 承担社会责任", "C. 浪费时间", "D. 获取报酬"], "answer": "B", "explanation": "", "source": "考点：第三单元·第九课·第二框｜教材P92" }, { "id": "u3_q21", "type": "choice", "question": "21.（2023·青海）平等不等于（　　）", "options": ["A. 同等情况同等对待", "B. 不同情况差别对待", "C. 绝对平均主义", "D. 尊重差异"], "answer": "C", "explanation": "", "source": "考点：第三单元·第七课·第二框｜教材P76" }, { "id": "u3_q22", "type": "choice", "question": "22.（2025·海南）公平的社会能（　　）<br>①激发潜能　②减少冲突　③促进和谐　④保证人人成功", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "A", "explanation": "", "source": "考点：第三单元·第八课·第一框｜教材P80" }, { "id": "u3_q23", "type": "choice", "question": "23.（2024·甘肃）面对非正义行为，正确的态度是（　　）", "options": ["A. 事不关己", "B. 奋不顾身硬拼", "C. 有勇有谋应对", "D. 跟风起哄"], "answer": "C", "explanation": "", "source": "考点：第三单元·第八课·第二框｜教材P86" }, { "id": "u3_q24", "type": "choice", "question": "24.（2023·内蒙古）社会责任感的基础是（　　）", "options": ["A. 对自己负责", "B. 对家庭负责", "C. 对国家负责", "D. 对自然负责"], "answer": "A", "explanation": "", "source": "考点：第三单元·第九课·第一框｜教材P89" }, { "id": "u3_q25", "type": "choice", "question": "25.（2025·新疆）参与垃圾分类宣传，属于（　　）", "options": ["A. 无意义活动", "B. 奉献社会的具体行动", "C. 政府的事", "D. 形式主义"], "answer": "B", "explanation": "", "source": "考点：第三单元·第九课·第二框｜教材P93" }, { "id": "u3_q26", "type": "choice", "question": "26.（2024·西藏）珍视自由，就要（　　）", "options": ["A. 超越法律边界", "B. 在法律范围内行使权利", "C. 只享受不担责", "D. 抵制所有管理"], "answer": "B", "explanation": "", "source": "考点：第三单元·第七课·第一框｜教材P73" }, { "id": "u3_q27", "type": "choice", "question": "27.（2023·河北）“同票同权”体现（　　）", "options": ["A. 自由", "B. 平等", "C. 公平", "D. 正义"], "answer": "B", "explanation": "", "source": "考点：第三单元·第七课·第二框｜教材P76" }, { "id": "u3_q28", "type": "choice", "question": "28.（2025·山西）考试监考严格，防止作弊。这维护了（　　）", "options": ["A. 机会公平", "B. 规则公平", "C. 结果公平", "D. 财富公平"], "answer": "B", "explanation": "", "source": "考点：第三单元·第八课·第一框｜教材P80" }, { "id": "u3_q29", "type": "choice", "question": "29.（2024·黑龙江）见义勇为但受伤，国家给予救助。这体现（　　）", "options": ["A. 正义需要制度保障", "B. 勇气不值得", "C. 法律无用", "D. 社会冷漠"], "answer": "A", "explanation": "", "source": "考点：第三单元·第八课·第二框｜教材P86" }, { "id": "u3_q30", "type": "choice", "question": "30.（2023·云南）“天下兴亡，匹夫有责”强调（　　）", "options": ["A. 国家责任", "B. 个人责任", "C. 集体责任", "D. 历史责任"], "answer": "B", "explanation": "", "source": "考点：第三单元·第九课·第一框｜教材P89" }, { "id": "u3_q31", "type": "choice", "question": "31.（2025·安徽）下列不属于奉献社会的是（　　）", "options": ["A. 参加环保志愿活动", "B. 匿名捐款", "C. 在网络散布谣言", "D. 辅导同学功课"], "answer": "C", "explanation": "", "source": "考点：第三单元·第九课·第二框｜教材P92" }, { "id": "u3_q32", "type": "choice", "question": "32.（2024·湖北）平等要求我们（　　）", "options": ["A. 消除一切差异", "B. 尊重他人合法权利", "C. 人人收入相同", "D. 忽视个体特点"], "answer": "B", "explanation": "", "source": "考点：第三单元·第七课·第二框｜教材P77" }, { "id": "u3_q33", "type": "choice", "question": "33.（2023·贵州）公平的内涵包括（　　）<br>①权利公平　②规则公平　③机会公平　④财富公平", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "A", "explanation": "", "source": "考点：第三单元·第八课·第一框｜教材P80" }, { "id": "u3_q34", "type": "choice", "question": "34.（2025·江西）司法公正属于（　　）", "options": ["A. 程序正义", "B. 实体正义", "C. 两者都是", "D. 与正义无关"], "answer": "C", "explanation": "", "source": "考点：第三单元·第八课·第二框｜教材P85" }, { "id": "u3_q35", "type": "choice", "question": "35.（2024·湖南）承担责任的回报包括（　　）", "options": ["A. 物质奖励", "B. 良好自我感觉、他人尊重", "C. 更多任务", "D. 被人嫉妒"], "answer": "B", "explanation": "", "source": "考点：第三单元·第九课·第一框｜教材P90" }, { "id": "u3_q36", "type": "choice", "question": "36.（2023·山东）“自由只服从法律”说明（　　）", "options": ["A. 法律是自由的保障", "B. 法律是自由的枷锁", "C. 自由不存在", "D. 法律可有可无"], "answer": "A", "explanation": "", "source": "考点：第三单元·第七课·第一框｜教材P73" }, { "id": "u3_q37", "type": "choice", "question": "37.（2025·河南）青少年奉献社会，最重要的是（　　）", "options": ["A. 做惊天动地大事", "B. 热爱劳动、爱岗敬业（未来）", "C. 只说不做", "D. 等待安排"], "answer": "B", "explanation": "教材强调“服务和奉献社会，需要热爱劳动、爱岗敬业”。", "source": "考点：第三单元·第九课·第二框｜教材P93" }, { "id": "u3_q38", "type": "choice", "question": "38.（2024·全国模拟）自由、平等、公平、正义的共同目标是（　　）", "options": ["A. 个人利益最大化", "B. 构建美好社会", "C. 强化政府权力", "D. 消除所有矛盾"], "answer": "B", "explanation": "", "source": "考点：第三单元整体逻辑｜教材P72–93" }, { "id": "u3_q39", "type": "material", "question": "39.（2024·北京）【材料】某市地铁禁止电子设备外放声音，乘客自觉遵守。<br>\n  （1）这一规定是否限制自由？为什么？（4分）<br>\n  （2）如何在公共场所珍视自由？（4分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）不是限制自由，而是划定自由边界；（2分）保障他人不受干扰的合法权利。（2分）<br><br>\n    （2）①自觉遵守公共规则；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②尊重他人自由和权利。（2分）", "source": "考点：第三单元·第七课·第一框｜教材P72–73" }, { "id": "u3_q40", "type": "material", "question": "40.（2023·上海）【材料】某企业招聘公告写明“男女同工同酬，能力优先”。<br>\n  （1）该做法践行了什么原则？（2分）<br>\n  （2）生活中如何反对不平等现象？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）平等原则。（2分）<br><br>\n    （2）①平等对待他人合法权利；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②敢于抵制特权和歧视；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③必要时依法维权。（2分）", "source": "考点：第三单元·第七课·第二框｜教材P77" }, { "id": "u3_q41", "type": "material", "question": "41.（2025·广东）【材料】学校设立“阳光分班”系统，随机分配学生，教师均衡配置。<br>\n  （1）此举维护了哪种公平？（2分）<br>\n  （2）为什么社会需要公平？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）机会公平、规则公平。（2分）<br><br>\n    （2）①公平是社会稳定和进步基础；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②保障个人生存发展；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③激发潜能，提高效率。（2分）", "source": "考点：第三单元·第八课·第一框｜教材P80–81" }, { "id": "u3_q42", "type": "material", "question": "42.（2024·浙江）【材料】小王目睹同学被勒索，悄悄记下车牌号报警，警方迅速破案。<br>\n  （1）小王的行为体现了什么品质？（2分）<br>\n  （2）青少年应如何守护正义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）守护正义、见义“智”为。（2分）<br><br>\n    （2）①敢于斗争，相信正义必胜；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②讲究策略，寻找有效方法；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③借助法律和他人力量。（2分）", "source": "考点：第三单元·第八课·第二框｜教材P86" }, { "id": "u3_q43", "type": "material", "question": "43.（2023·天津）【材料】中学生小林每天坚持照顾生病的邻居奶奶，风雨无阻。<br>\n  （1）小林承担了什么责任？（2分）<br>\n  （2）承担责任对个人成长有何意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）关爱他人、服务社会的责任。（2分）<br><br>\n    （2）①提升能力，获得认可；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②赢得信任，拓展发展空间；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③实现人生价值。（2分）", "source": "考点：第三单元·第九课·第一框｜教材P90" }, { "id": "u3_q44", "type": "material", "question": "44.（2025·山东）【材料】社区组织“邻里节”，居民互帮互助，共享工具、照看孩子。<br>\n  （1）这体现了哪些价值观？（2分）<br>\n  （2）如何通过日常行动奉献社会？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）平等、友善、奉献、责任。（2分）<br><br>\n    （2）①参与社区服务；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②关爱弱势群体；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③从小事做起，持之以恒。（2分）", "source": "考点：第三单元·第九课·第二框｜教材P92–93" }, { "id": "u3_q45", "type": "material", "question": "45.（2024·福建）【材料】某地出台《反就业歧视条例》，禁止基于性别、年龄等不合理限制。<br>\n  （1）该条例保障公民哪项权利？（2分）<br>\n  （2）从“平等”角度，分析立法意义。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）平等就业权。（2分）<br><br>\n    （2）①以制度保障平等；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②纠正现实中的不平等；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③推动社会公平正义。（2分）", "source": "考点：第三单元·第七课·第二框｜教材P77" }, { "id": "u3_q46", "type": "material", "question": "46.（2023·河南）【材料】法院公开审理案件，允许公民旁听，判决书网上公布。<br>\n  （1）这体现了司法对什么的追求？（2分）<br>\n  （2）程序正义为何重要？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）正义（程序正义与实体正义）。（2分）<br><br>\n    （2）①确保审判公正；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②增强司法公信力；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③保障当事人权利。（2分）", "source": "考点：第三单元·第八课·第二框｜教材P85" }, { "id": "u3_q47", "type": "material", "question": "47.（2025·情境题）你在网络看到有人嘲笑残障人士视频。<br>\n  （1）这种行为违背哪些价值观？（2分）<br>\n  （2）作为网民，你该如何应对？（4分）<br>\n  （3）从“践行平等”角度谈启示。（2分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）平等、尊重、友善。（2分）<br>\n    （2）①不点赞、不转发；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②举报该内容。（2分）<br>\n    （3）平等要求我们尊重差异，反对歧视。（2分）", "source": "考点：第三单元·第七课·第二框｜教材P77" }, { "id": "u3_q48", "type": "material", "question": "48.（2024·全国模拟）【材料】某校设立“诚信考场”，学生自主监考，秩序井然。<br>\n  （1）这体现了自由与规则怎样的关系？（4分）<br>\n  （2）对青少年培养责任感有何启示？（4分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）规则保障自由；自律实现真正自由。（4分）<br>\n    （2）①责任感源于内心认同；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②信任能激发责任担当。（2分）", "source": "考点：第三单元·第七课·第一框 + 第九课·第一框｜教材P73, P90" }, { "id": "u3_q49", "type": "material", "question": "49.（2023·江苏）【材料】快递员暴雨中护住客户包裹，自己淋湿生病。<br>\n  （1）他履行了什么责任？（2分）<br>\n  （2）如何理解“平凡中的伟大”？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）职业责任、社会责任。（2分）<br><br>\n    （2）①奉献不在大小；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②坚守岗位就是贡献；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③平凡人也能闪耀精神光芒。（2分）", "source": "考点：第三单元·第九课·第二框｜教材P93" }, { "id": "u3_q50", "type": "material", "question": "50.（2025·陕西）【材料】中学生小赵发现学校周边盲道被占，向城管部门反映后解决。<br>\n  （1）小赵行使了什么权利？（2分）<br>\n  （2）从“公平正义”角度，分析其行为价值。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）监督权、建议权。（2分）<br><br>\n    （2）①维护残障人士平等通行权；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②推动公共设施公平使用；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③体现公民守护正义的担当。（2分）", "source": "考点：第三单元·第八课·第二框｜教材P86" }, { "id": "u3_q51", "type": "material", "question": "51.（2024·湖北）【材料】高考为残障考生提供盲文试卷、延长考试时间。<br>\n  （1）这属于哪种平等？（2分）<br>\n  （2）为什么不同情况要差别对待？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）不同情况差别对待（实质平等）。（2分）<br><br>\n    （2）①形式平等可能造成事实不公；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②差别对待才能实现实质公平；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③体现社会人文关怀。（2分）", "source": "考点：第三单元·第七课·第二框｜教材P76" }, { "id": "u3_q52", "type": "material", "question": "52.（2023·四川）【材料】班级评选“责任之星”，小美因长期帮扶学困生当选。<br>\n  （1）她的行为体现了什么精神？（2分）<br>\n  （2）青少年应如何担当社会责任？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）关爱他人、勇于担当。（2分）<br><br>\n    （2）①从身边小事做起；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②积极参与公益；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③提升服务能力。（2分）", "source": "考点：第三单元·第九课·第一框｜教材P90" }, { "id": "u3_q53", "type": "material", "question": "53.（2025·云南）【材料】某平台算法推荐导致“信息茧房”，加剧群体偏见。<br>\n  （1）这可能损害什么社会价值？（2分）<br>\n  （2）从“公平正义”角度，提出改进建议。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）公平、平等、理性对话。（2分）<br><br>\n    （2）①算法设计应兼顾多元观点；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②平台承担社会责任；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③用户提升媒介素养，主动打破信息茧房。（2分）", "source": "考点：第三单元·第八课整体｜教材P80–86" }, { "id": "u3_q54", "type": "material", "question": "54.（2024·安徽）【材料】社区设立“时间银行”，志愿者服务可兑换未来帮助。<br>\n  （1）这机制鼓励什么行为？（2分）<br>\n  （2）从“奉献社会”角度，分析其创新性。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）志愿服务、互助奉献。（2分）<br><br>\n    （2）①将奉献制度化、可持续；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②激励更多人参与；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③形成“我为人人，人人为我”风尚。（2分）", "source": "考点：第三单元·第九课·第二框｜教材P93" }, { "id": "u3_q55", "type": "material", "question": "55.（2023·江西）【材料】小周匿名资助贫困生多年，从未透露身份。<br>\n  （1）他的行为体现了什么品质？（2分）<br>\n  （2）这种奉献精神对社会有何影响？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）无私奉献、关爱他人。（2分）<br><br>\n    （2）①传递温暖，促进社会和谐；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②弘扬传统美德；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③激发更多人参与公益。（2分）", "source": "考点：第三单元·第九课·第二框｜教材P92" }, { "id": "u3_q56", "type": "material", "question": "56.（2025·辽宁）【材料】某市将“参与志愿服务”纳入学生综合素质评价。<br>\n  （1）此举旨在培养学生的什么意识？（2分）<br>\n  （2）从“勇担社会责任”角度，分析其意义。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）社会责任意识、奉献精神。（2分）<br><br>\n    （2）①引导知行合一；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②推动青少年融入社会；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③夯实公民社会基础。（2分）", "source": "考点：第三单元·第九课整体｜教材P89–93" }, { "id": "u3_q57", "type": "material", "question": "57.（2024·重庆）【材料】初中生小杨发现有人破坏公共健身器材，拍照举报。<br>\n  （1）小杨的行为体现了哪些价值观？（2分）<br>\n  （2）青少年应如何在生活中维护公平正义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）正义感、责任感、公民意识。（2分）<br><br>\n    （2）①从小事做起，制止不文明行为；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②善用合法渠道维权或举报；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③提升法治和道德素养。（2分）", "source": "考点：第三单元·第八课·第二框｜教材P86" }, { "id": "u3_q58", "type": "material", "question": "58.（2023·全国）【综合】请结合本单元知识，谈谈青少年如何“在追求自由平等中勇担社会责任”。（8分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    ①珍视自由，依法行使权利，不损害他人权益；（2分）<br>\n    ②践行平等，反对歧视，尊重差异；（2分）<br>\n    ③坚守公平，守护正义，敢于并善于斗争；（2分）<br>\n    ④积极奉献社会，从身边小事做起，勇担时代责任。（2分）", "source": "考点：第三单元整体｜教材P72–93" }] }, { "id": "u4", "title": "第四单元 维护国家利益（2024新版）", "questions": [{ "id": "u4_q1", "type": "choice", "question": "1.（2025·新课标）国家利益是（　　）", "options": ["A. 政府的利益", "B. 广大人民最根本、最长远的利益", "C. 少数人的特权", "D. 企业盈利目标"], "answer": "B", "explanation": "教材明确指出“国家利益反映广大人民的共同需求”。", "source": "考点：第四单元·第十课·第一框｜教材P96" }, { "id": "u4_q2", "type": "choice", "question": "2.（2024·北京）国家核心利益包括（　　）<br>①国家主权　②国家安全　③领土完整　④文化繁荣", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ②③④"], "answer": "A", "explanation": "", "source": "考点：第四单元·第十课·第一框｜教材P97" }, { "id": "u4_q3", "type": "choice", "question": "3.（2023·重庆）当国家利益与个人利益发生矛盾时，应（　　）", "options": ["A. 优先考虑个人", "B. 完全放弃个人利益", "C. 以国家利益为重", "D. 两者都不管"], "answer": "C", "explanation": "", "source": "考点：第四单元·第十课·第一框｜教材P98" }, { "id": "u4_q4", "type": "choice", "question": "4.（2025·浙江）下列属于捍卫国家利益的行为是（　　）", "options": ["A. 泄露国家机密", "B. 在网络辱骂国家领导人", "C. 举报危害国家安全行为", "D. 拒绝服兵役"], "answer": "C", "explanation": "", "source": "考点：第四单元·第十课·第二框｜教材P100" }, { "id": "u4_q5", "type": "choice", "question": "5.（2024·江苏）钱学森放弃国外优厚待遇回国，体现了（　　）", "options": ["A. 个人英雄主义", "B. 坚持国家利益至上", "C. 追求名利", "D. 盲目爱国"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十课·第二框｜教材P101" }, { "id": "u4_q6", "type": "choice", "question": "6.（2023·广东）我国人民军队的建军之本、强军之魂是（　　）", "options": ["A. 武器先进", "B. 党对军队的绝对领导", "C. 军费充足", "D. 国际合作"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十一课·第一框｜教材P104" }, { "id": "u4_q7", "type": "choice", "question": "7.（2025·山东）人民军队的根本宗旨是（　　）", "options": ["A. 打赢战争", "B. 全心全意为人民服务", "C. 保卫边疆", "D. 维护政权"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十一课·第一框｜教材P104" }, { "id": "u4_q8", "type": "choice", "question": "8.（2024·河南）全面推进国防和军队现代化的战略安排是（　　）", "options": ["A. 2035年基本实现国防和军队现代化", "B. 2050年基本实现", "C. 2027年完成", "D. 已经实现"], "answer": "A", "explanation": "", "source": "考点：第四单元·第十一课·第二框｜教材P106" }, { "id": "u4_q9", "type": "choice", "question": "9.（2023·四川）新时代强军目标是建设一支（　　）的人民军队。", "options": ["A. 听党指挥、能打胜仗、作风优良", "B. 装备精良、人数众多", "C. 参与国际维和", "D. 服从政府命令"], "answer": "A", "explanation": "", "source": "考点：第四单元·第十一课·第二框｜教材P106" }, { "id": "u4_q10", "type": "choice", "question": "10.（2025·福建）总体国家安全观以（　　）为宗旨。", "options": ["A. 政治安全", "B. 人民安全", "C. 军事安全", "D. 经济安全"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第一框｜教材P109" }, { "id": "u4_q11", "type": "choice", "question": "11.（2024·湖北）总体国家安全观以（　　）为根本。", "options": ["A. 人民安全", "B. 政治安全", "C. 经济安全", "D. 网络安全"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第一框｜教材P109" }, { "id": "u4_q12", "type": "choice", "question": "12.（2023·陕西）下列属于非传统安全威胁的是（　　）", "options": ["A. 外敌入侵", "B. 网络攻击、生物安全", "C. 边境冲突", "D. 军事政变"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第一框｜教材P110" }, { "id": "u4_q13", "type": "choice", "question": "13.（2025·天津）公民发现间谍行为，应拨打（　　）", "options": ["A. 110", "B. 12339", "C. 12315", "D. 12345"], "answer": "B", "explanation": "12339是国家安全机关举报受理电话。", "source": "考点：第四单元·第十二课·第二框｜教材P112" }, { "id": "u4_q14", "type": "choice", "question": "14.（2024·湖南）青少年维护国家安全可以（　　）", "options": ["A. 只靠政府", "B. 保守所知国家秘密", "C. 在网上随意讨论军事基地", "D. 忽视网络安全"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第二框｜教材P112" }, { "id": "u4_q15", "type": "choice", "question": "15.（2023·江西）国家安全是（　　）", "options": ["A. 军队的事", "B. 国家生存发展的基本前提", "C. 与我无关", "D. 只指军事安全"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第一框｜教材P108" }, { "id": "u4_q16", "type": "choice", "question": "16.（2025·辽宁）国家利益与人民利益的关系是（　　）", "options": ["A. 对立", "B. 高度统一", "C. 人民利益高于国家", "D. 国家利益虚无"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十课·第一框｜教材P98" }, { "id": "u4_q17", "type": "choice", "question": "17.（2024·吉林）黄旭华隐姓埋名30年研制核潜艇，体现（　　）", "options": ["A. 个人牺牲", "B. 捍卫国家利益的担当", "C. 不爱家庭", "D. 追求荣誉"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十课·第二框｜教材P101" }, { "id": "u4_q18", "type": "choice", "question": "18.（2023·广西）人民军队诞生于（　　）", "options": ["A. 1921年", "B. 1927年南昌起义", "C. 1949年", "D. 1937年"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十一课·第一框｜教材P104" }, { "id": "u4_q19", "type": "choice", "question": "19.（2025·贵州）国防和军队现代化“三步走”战略中，到本世纪中叶要（　　）", "options": ["A. 基本实现现代化", "B. 全面建成世界一流军队", "C. 完成机械化", "D. 停止发展"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十一课·第二框｜教材P106" }, { "id": "u4_q20", "type": "choice", "question": "20.（2024·宁夏）下列属于政治安全的是（　　）", "options": ["A. 粮食安全", "B. 政权稳定、制度安全", "C. 环境污染", "D. 网络诈骗"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第一框｜教材P109" }, { "id": "u4_q21", "type": "choice", "question": "21.（2023·青海）总体国家安全观涵盖（　　）个重点领域。", "options": ["A. 10", "B. 12", "C. 16", "D. 20"], "answer": "C", "explanation": "包括政治、国土、军事、经济、文化、社会、科技、网络、生态、资源、核、海外利益、太空、深海、极地、生物等16个领域。", "source": "考点：第四单元·第十二课·第一框｜教材P110" }, { "id": "u4_q22", "type": "choice", "question": "22.（2025·海南）在社交媒体晒军装照可能危害（　　）", "options": ["A. 个人隐私", "B. 国家安全", "C. 社交自由", "D. 形象美观"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第二框｜教材P112" }, { "id": "u4_q23", "type": "choice", "question": "23.（2024·甘肃）每年4月15日是（　　）", "options": ["A. 国防教育日", "B. 全民国家安全教育日", "C. 抗战胜利日", "D. 建军节"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第二框｜教材P111" }, { "id": "u4_q24", "type": "choice", "question": "24.（2023·内蒙古）坚持国家利益至上，就要（　　）", "options": ["A. 盲目排外", "B. 理性爱国、合法有序", "C. 只喊口号", "D. 抵制所有外国产品"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十课·第二框｜教材P102" }, { "id": "u4_q25", "type": "choice", "question": "25.（2025·新疆）军队的最高领导权属于（　　）", "options": ["A. 国务院", "B. 中央军委主席", "C. 中国共产党中央委员会", "D. 全国人大"], "answer": "C", "explanation": "党对军队的绝对领导是根本原则。", "source": "考点：第四单元·第十一课·第一框｜教材P104" }, { "id": "u4_q26", "type": "choice", "question": "26.（2024·西藏）科技安全属于（　　）", "options": ["A. 传统安全", "B. 非传统安全", "C. 军事安全", "D. 个人安全"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第一框｜教材P110" }, { "id": "u4_q27", "type": "choice", "question": "27.（2023·河北）“清澈的爱，只为中国”体现（　　）", "options": ["A. 个人情感", "B. 新时代戍边战士的国家忠诚", "C. 文艺创作", "D. 网络流行语"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十课·第二框｜教材P101" }, { "id": "u4_q28", "type": "choice", "question": "28.（2025·山西）国防教育法规定，学校应（　　）", "options": ["A. 只教文化课", "B. 开展国防教育", "C. 组织军训即可", "D. 由学生自愿参与"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十一课·第二框｜教材P107" }, { "id": "u4_q29", "type": "choice", "question": "29.（2024·黑龙江）生物安全属于国家安全体系中的（　　）", "options": ["A. 传统领域", "B. 新兴领域", "C. 次要领域", "D. 无关领域"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第一框｜教材P110" }, { "id": "u4_q30", "type": "choice", "question": "30.（2023·云南）公民履行维护国家安全义务，包括（　　）<br>①遵守法律　②提供便利　③保守秘密　④及时报告", "options": ["A. ①②③", "B. ①②④", "C. ①③④", "D. ①②③④"], "answer": "D", "explanation": "", "source": "考点：第四单元·第十二课·第二框｜教材P112" }, { "id": "u4_q31", "type": "choice", "question": "31.（2025·安徽）下列不属于国家核心利益的是（　　）", "options": ["A. 国家主权", "B. 国家安全", "C. 文化产业收入", "D. 领土完整"], "answer": "C", "explanation": "", "source": "考点：第四单元·第十课·第一框｜教材P97" }, { "id": "u4_q32", "type": "choice", "question": "32.（2024·湖北）人民军队始终是（　　）", "options": ["A. 党的军队、人民的军队、社会主义国家的军队", "B. 政府的武装力量", "C. 国际维和部队", "D. 地方保安"], "answer": "A", "explanation": "", "source": "考点：第四单元·第十一课·第一框｜教材P105" }, { "id": "u4_q33", "type": "choice", "question": "33.（2023·贵州）经济安全是国家安全的（　　）", "options": ["A. 宗旨", "B. 根本", "C. 基础", "D. 保障"], "answer": "C", "explanation": "", "source": "考点：第四单元·第十二课·第一框｜教材P109" }, { "id": "u4_q34", "type": "choice", "question": "34.（2025·江西）青少年维护国家利益，最重要的是（　　）", "options": ["A. 参军打仗", "B. 努力学习，增强本领", "C. 网络骂人", "D. 不出国"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十课·第二框｜教材P102" }, { "id": "u4_q35", "type": "choice", "question": "35.（2024·湖南）总体国家安全观强调（　　）", "options": ["A. 军事万能", "B. 以人民安全为宗旨", "C. 忽视经济安全", "D. 只防外部威胁"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十二课·第一框｜教材P109" }, { "id": "u4_q36", "type": "choice", "question": "36.（2023·山东）“军强才能国安”说明（　　）", "options": ["A. 军队决定一切", "B. 强大国防是国家安全基石", "C. 应穷兵黩武", "D. 和平不重要"], "answer": "B", "explanation": "", "source": "考点：第四单元·第十一课整体｜教材P104–107" }, { "id": "u4_q37", "type": "material", "question": "37.（2024·北京）【材料】某科研人员拒绝国外高薪诱惑，坚守国家重大项目。<br>\n  （1）他践行了什么价值观？（2分）<br>\n  （2）如何理解“国家利益高于一切”？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）国家利益至上。（2分）<br><br>\n    （2）①国家利益关系民族生存、国家兴亡；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②国家利益是人民利益的集中体现；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③维护国家利益是每个公民的责任。（2分）", "source": "考点：第四单元·第十课·第一框｜教材P98" }, { "id": "u4_q38", "type": "material", "question": "38.（2023·上海）【材料】大学生小李响应号召参军入伍，服役期间表现优异。<br>\n  （1）他履行了什么义务？（2分）<br>\n  （2）青年如何捍卫国家利益？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）依法服兵役、维护国家安全的义务。（2分）<br><br>\n    （2）①努力学习，增强报国本领；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②理性表达爱国情感；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③必要时牺牲个人利益。（2分）", "source": "考点：第四单元·第十课·第二框｜教材P100–102" }, { "id": "u4_q39", "type": "material", "question": "39.（2025·广东）【材料】人民子弟兵在抗洪抢险中连续奋战，救出数百群众。<br>\n  （1）这体现人民军队什么性质？（2分）<br>\n  （2）为什么说军队是党和人民信赖的？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）全心全意为人民服务。（2分）<br><br>\n    （2）①听党指挥，政治可靠；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②英勇善战，能打胜仗；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③作风优良，心系人民。（2分）", "source": "考点：第四单元·第十一课·第一框｜教材P104–105" }, { "id": "u4_q40", "type": "material", "question": "40.（2024·浙江）【材料】我国加快航母、歼-20等先进装备列装。<br>\n  （1）此举服务于什么战略目标？（2分）<br>\n  （2）推进国防现代化有何意义？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）建设世界一流军队。（2分）<br><br>\n    （2）①捍卫国家主权和安全；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②支撑中华民族伟大复兴；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③维护世界和平。（2分）", "source": "考点：第四单元·第十一课·第二框｜教材P106" }, { "id": "u4_q41", "type": "material", "question": "41.（2023·天津）【材料】某网民在军事论坛发布基地照片，被依法处理。<br>\n  （1）他违反了哪部法律？（2分）<br>\n  （2）从国家安全角度，分析教训。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）《中华人民共和国国家安全法》或《保守国家秘密法》。（2分）<br><br>\n    （2）①国家安全人人有责；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②网络不是法外之地；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③需增强保密意识。（2分）", "source": "考点：第四单元·第十二课·第二框｜教材P112" }, { "id": "u4_q42", "type": "material", "question": "42.（2025·山东）【材料】学校组织参观国家安全教育基地，开展主题班会。<br>\n  （1）这属于什么教育？（2分）<br>\n  （2）青少年如何树立总体国家安全观？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）国家安全教育。（2分）<br><br>\n    （2）①学习相关法律法规；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②识别危害国家安全行为；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③积极履行公民义务。（2分）", "source": "考点：第四单元·第十二课·第二框｜教材P111–112" }, { "id": "u4_q43", "type": "material", "question": "43.（2024·福建）【材料】某企业核心技术被窃取，造成重大损失。<br>\n  （1）这涉及哪种安全？（2分）<br>\n  （2）从国家利益角度，谈启示。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）科技安全、经济安全。（2分）<br><br>\n    （2）①核心技术必须自主可控；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②加强知识产权保护；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③全民提高防范意识。（2分）", "source": "考点：第四单元·第十二课·第一框｜教材P110" }, { "id": "u4_q44", "type": "material", "question": "44.（2023·河南）【材料】边境冲突中，战士陈祥榕写下“清澈的爱，只为中国”。<br>\n  （1）这句话体现什么精神？（2分）<br>\n  （2）新时代青年应如何传承这种精神？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）爱国主义、忠诚担当。（2分）<br><br>\n    （2）①坚定理想信念；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②将个人梦融入中国梦；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③在平凡岗位奉献。（2分）", "source": "考点：第四单元·第十课·第二框｜教材P101" }, { "id": "u4_q45", "type": "material", "question": "45.（2025·情境题）你在旅游时发现有人用无人机拍摄军事禁区。<br>\n  （1）该行为可能危害什么？（2分）<br>\n  （2）你该如何应对？（4分）<br>\n  （3）从“维护国家安全”角度谈责任。（2分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）军事安全、国家安全。（2分）<br>\n    （2）①立即制止；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②拨打12339举报。（2分）<br>\n    （3）维护国家安全是每个公民的法定义务。（2分）", "source": "考点：第四单元·第十二课·第二框｜教材P112" }, { "id": "u4_q46", "type": "material", "question": "46.（2024·全国模拟）【材料】某校开展“我与国家安全”征文活动。<br>\n  （1）请列举两个国家安全重点领域。（2分）<br>\n  （2）结合生活，谈谈你能做什么。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）如：网络安全、生态安全、粮食安全等。（2分）<br><br>\n    （2）①不随意连接公共WiFi；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②节约粮食，保护环境；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③宣传国家安全知识。（2分）", "source": "考点：第四单元·第十二课整体｜教材P109–112" }, { "id": "u4_q47", "type": "material", "question": "47.（2023·江苏）【材料】退役军人张富清深藏功名60年，扎根基层奉献。<br>\n  （1）他展现了什么品质？（2分）<br>\n  （2）从“国家利益”角度，评价其一生。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）淡泊名利、无私奉献。（2分）<br><br>\n    （2）①战争年代捍卫国家利益；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②和平时期服务人民；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③一生践行国家利益至上。（2分）", "source": "考点：第四单元·第十课·第二框｜教材P101" }, { "id": "u4_q48", "type": "material", "question": "48.（2025·陕西）【材料】我国设立全民国家安全教育日已十年。<br>\n  （1）设立目的是什么？（2分）<br>\n  （2）为何要全民参与国家安全？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）增强全民国家安全意识。（2分）<br><br>\n    （2）①国家安全是人民幸福安康前提；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②风险挑战日益复杂；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③人人都是主角，人人皆有责任。（2分）", "source": "考点：第四单元·第十二课·第二框｜教材P111" }, { "id": "u4_q49", "type": "material", "question": "49.（2024·湖北）【材料】某高校开设“国家安全通识课”，学生反响热烈。<br>\n  （1）这体现教育什么功能？（2分）<br>\n  （2）从“总体国家安全观”谈课程价值。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）立德树人、国家安全教育功能。（2分）<br><br>\n    （2）①帮助学生全面认识安全内涵；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②培养系统思维；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③筑牢思想防线。（2分）", "source": "考点：第四单元·第十二课·第二框｜教材P111" }, { "id": "u4_q50", "type": "material", "question": "50.（2023·四川）【材料】中国维和部队在非洲修建医院、培训医生。<br>\n  （1）这体现人民军队什么使命？（2分）<br>\n  （2）如何理解“军强才能国安”与“维护世界和平”？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）维护世界和平的使命。（2分）<br><br>\n    （2）①强大军队首先保卫本国安全；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②也具备能力承担国际责任；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③中国军队是和平之师。（2分）", "source": "考点：第四单元·第十一课整体｜教材P105–107" }, { "id": "u4_q51", "type": "material", "question": "51.（2025·云南）【材料】某地非法捕捞濒危鱼类，破坏生态平衡。<br>\n  （1）这危害哪种安全？（2分）<br>\n  （2）从总体国家安全观看，应如何治理？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）生态安全、生物安全。（2分）<br><br>\n    （2）①完善法律法规；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②加强执法监管；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③公众参与监督。（2分）", "source": "考点：第四单元·第十二课·第一框｜教材P110" }, { "id": "u4_q52", "type": "material", "question": "52.（2024·安徽）【材料】初中生小王设计“防间谍”宣传海报在校展出。<br>\n  （1）他行使了什么权利？（2分）<br>\n  （2）从“维护国家安全”角度，肯定其行为。（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）受教育权、表达权。（2分）<br><br>\n    （2）①主动宣传国家安全知识；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②发挥青少年影响力；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③体现主人翁意识。（2分）", "source": "考点：第四单元·第十二课·第二框｜教材P112" }, { "id": "u4_q53", "type": "material", "question": "53.（2023·江西）【材料】某公司员工被境外势力收买，泄露数据。<br>\n  （1）该行为违反什么义务？（2分）<br>\n  （2）企业和个人应如何防范？（6分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    （1）维护国家安全、保守国家秘密的义务。（2分）<br><br>\n    （2）①加强员工国家安全教育；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;②健全数据安全管理制度；（2分）<br>\n    &nbsp;&nbsp;&nbsp;&nbsp;③提高警惕，识别渗透策反。（2分）", "source": "考点：第四单元·第十二课·第二框｜教材P112" }, { "id": "u4_q54", "type": "material", "question": "54.（2023·全国）【综合】请结合本单元，谈谈青少年如何“在强国征程中维护国家利益”。（8分）", "options": [], "answer": "", "explanation": "<strong>参考答案：</strong><br>\n    ①树立国家利益至上观念，增强危机意识；（2分）<br>\n    ②支持国防和军队建设，尊崇军人；（2分）<br>\n    ③学习总体国家安全观，识别风险；（2分）<br>\n    ④从日常做起，以实际行动维护国家安全与利益。（2分）", "source": "考点：第四单元整体｜教材P96–112" }] }];
+
+        class App {
+            constructor(data) {
+                this.data = data;
+                this.textbookPoints = TEXTBOOK_POINTS || [];
+
+                // Combine all questions for easier access
+                this.allQuestions = [];
+                this.data.forEach(u => this.allQuestions.push(...u.questions));
+                this.textbookPoints.forEach(p => {
+                    // Adapt point to question format
+                    this.allQuestions.push({
+                        id: p.id,
+                        type: 'point',
+                        question: `请默写知识点：<strong>${p.title}</strong>`,
+                        explanation: p.content.replace(/\n/g, '<br>'),
+                        source: p.source,
+                        options: [] // No options for points
+                    });
+                });
+
+                this.state = {
+                    currentUnitId: null,
+                    questions: [],
+                    currentIndex: 0,
+                    answers: {},
+                    score: 0,
+                    searchResults: [],
+                    // Dictation specific
+                    dictationConfig: { stars: 0, count: 30, timer: 10 },
+                    dictationTimer: null,
+                    dictationTimeLeft: 0,
+                    // Material question timer
+                    materialTimer: null,
+                    materialTimeLeft: 0,
+                    materialCanReveal: false
+                };
+
+                this.questionStars = JSON.parse(localStorage.getItem('daofa_stars')) || {};
+
+                this.userStats = JSON.parse(localStorage.getItem('daofa_stats')) || {
+                    totalAnswered: 0,
+                    correctCount: 0,
+                    lastStudyDate: null,
+                    streak: 0
+                };
+
+                this.init();
+            }
+
+            // --- Admin & Stars ---
+
+            adminAuth() {
+                document.getElementById('pwd-modal').classList.remove('hidden');
+                document.getElementById('pwd-input').value = '';
+                document.getElementById('pwd-input').focus();
+            }
+
+            closeAuth() {
+                document.getElementById('pwd-modal').classList.add('hidden');
+            }
+
+            checkAuth() {
+                const pwd = document.getElementById('pwd-input').value;
+                if (pwd === "daofa1") {
+                    this.closeAuth();
+                    this.renderAdmin();
+                    this.switchView('view-admin');
+                } else {
+                    alert("密码错误");
+                }
+            }
+
+            renderAdmin() {
+                const list = document.getElementById('admin-list');
+                list.innerHTML = '';
+
+                const search = document.getElementById('admin-search').value.toLowerCase();
+
+                // Filter
+                const filtered = this.allQuestions.filter(q =>
+                    q.type === 'point' && (q.question + (q.explanation || "")).toLowerCase().includes(search)
+                );
+
+                filtered.slice(0, 100).forEach(q => { // Limit render for perf
+                    const el = document.createElement('div');
+                    el.className = 'admin-list-item';
+
+                    const currentStar = this.questionStars[q.id] || 3; // Default 3
+
+                    // Star HTML
+                    let starsHtml = '';
+                    for (let i = 1; i <= 5; i++) {
+                        const cls = i <= currentStar ? 'fas' : 'far';
+                        starsHtml += `<i class="${cls} fa-star star-rating" onclick="app.setStar('${q.id}', ${i})"></i>`;
+                    }
+
+                    el.innerHTML = `
+                    <div style="flex:1; padding-right:20px;">
+                        <div style="font-weight:bold; font-size:0.9rem; color:var(--primary);">${q.id}</div>
+                        <div style="font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:500px;">
+                            ${q.question.replace(/<[^>]+>/g, '')}
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:5px;">${starsHtml}</div>
+                `;
+                    list.appendChild(el);
+                });
+
+                // Re-bind search
+                // Removed recursive binding to avoid performance issues
+                // Handled in setupAdminSearch
+            }
+
+            setupAdminSearch() {
+                const adminInput = document.getElementById('admin-search');
+                if (adminInput) {
+                    adminInput.oninput = () => this.renderAdmin();
+                }
+            }
+
+            setStar(id, rating) {
+                this.questionStars[id] = rating;
+                localStorage.setItem('daofa_stars', JSON.stringify(this.questionStars));
+                this.renderAdmin(); // Re-render to show update
+            }
+
+            // --- Dictation Mode ---
+
+            startDictationConfig() {
+                this.switchView('view-dictation-config');
+            }
+
+            setDictationConfig(key, value) {
+                this.state.dictationConfig[key] = value;
+
+                // Update UI
+                if (key === 'stars' || key === 'count') {
+                    const btns = document.querySelectorAll(`#view-dictation-config button[onclick*="'${key}'"]`);
+                    btns.forEach(b => {
+                        if (b.getAttribute('onclick').includes(`, ${value})`)) {
+                            b.classList.add('active');
+                        } else {
+                            b.classList.remove('active');
+                        }
+                    });
+                }
+            }
+
+            startDictation() {
+                // Get Timer Input
+                const timerVal = parseInt(document.getElementById('dictation-timer-input').value) || 10;
+                this.state.dictationConfig.timer = timerVal;
+
+                // Filter Questions
+                const minStars = this.state.dictationConfig.stars;
+                let pool = this.allQuestions.filter(q => {
+                    // User Requirement: Dictation source must be ONLY textbook points
+                    const isPoint = q.type === 'point';
+                    const star = this.questionStars[q.id] || 3; // Default 3
+                    return isPoint && star >= minStars;
+                });
+
+                if (pool.length === 0) {
+                    alert("没有符合该星级要求的题目，请调整设置或在管理后台设置星级。");
+                    return;
+                }
+
+                // Shuffle and slice
+                pool = this.shuffle(pool).slice(0, this.state.dictationConfig.count);
+
+                // Init State
+                this.state.questions = pool;
+                this.state.currentIndex = 0;
+                this.state.score = 0;
+                this.state.answers = {};
+                this.state.dictationTimeLeft = timerVal * 60;
+
+                this.startTimer();
+                this.renderDictationQuestion();
+                this.switchView('view-dictation');
+                // Init Canvas logic removed
+            }
+
+            startTimer() {
+                clearInterval(this.state.dictationTimer);
+                this.updateTimerDisplay();
+                this.state.dictationTimer = setInterval(() => {
+                    this.state.dictationTimeLeft--;
+                    this.updateTimerDisplay();
+                    if (this.state.dictationTimeLeft <= 0) {
+                        clearInterval(this.state.dictationTimer);
+                        alert("时间到！");
+                        // Could auto-submit or just stop
+                    }
+                }, 1000);
+            }
+
+            updateTimerDisplay() {
+                const m = Math.floor(this.state.dictationTimeLeft / 60);
+                const s = this.state.dictationTimeLeft % 60;
+                document.getElementById('dictation-timer').textContent =
+                    `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+
+            renderDictationQuestion() {
+                const q = this.state.questions[this.state.currentIndex];
+                const total = this.state.questions.length;
+
+                document.getElementById('dictation-progress').textContent = `题目 ${this.state.currentIndex + 1}/${total}`;
+                document.getElementById('dictation-q-text').innerHTML = q.question;
+
+                // Show Stars for this question
+                const stars = this.questionStars[q.id] || 3;
+                document.getElementById('dictation-stars').innerHTML = '★'.repeat(stars);
+
+                // Hide peek area initially
+                const peekArea = document.getElementById('peek-answer-area');
+                if (peekArea) {
+                    peekArea.style.display = 'none';
+                    peekArea.textContent = q.content || q.explanation || "暂无参考答案";
+                }
+                const peekIcon = document.getElementById('peek-icon');
+                if (peekIcon) {
+                    peekIcon.className = 'fas fa-eye';
+                    peekIcon.style.color = 'var(--text-muted)';
+                }
+
+                // Show peek button again
+                const peekBtns = document.querySelectorAll('.peek-btn');
+                peekBtns.forEach(btn => btn.style.display = '');
+
+                // Reset UI
+                // Hide input area by default since user said "no student writing"
+                document.getElementById('user-dictation-input').value = '';
+
+                // Ensure input mode elements are hidden or simplified
+                document.getElementById('dictation-input-area').classList.remove('hidden');
+                document.getElementById('dictation-input-area').style.display = 'block';
+                document.getElementById('dictation-answer-area').classList.add('hidden');
+
+                // Hide explicit input tools for pure "thinking/paper" mode
+                document.getElementById('user-dictation-input').classList.add('hidden');
+
+                // Add a hint for "Paper/Thinking" mode
+                let hint = document.getElementById('dictation-hint');
+                if (!hint) {
+                    hint = document.createElement('div');
+                    hint.id = 'dictation-hint';
+                    hint.style.color = 'var(--text-muted)';
+                    hint.style.textAlign = 'center';
+                    hint.style.marginBottom = '20px';
+                    hint.style.fontStyle = 'italic';
+                    document.getElementById('dictation-input-area').prepend(hint);
+                }
+                hint.textContent = "请在纸上默写或心中默念答案，完成后点击查看";
+
+                document.getElementById('dictation-answer-area').classList.add('hidden');
+                document.getElementById('diff-view').style.display = 'none';
+            }
+
+            togglePeekingAnswer() {
+                const peekArea = document.getElementById('peek-answer-area');
+                const peekIcon = document.getElementById('peek-icon');
+                if (peekArea && peekIcon) {
+                    if (peekArea.style.display === 'block') {
+                        peekArea.style.display = 'none';
+                        peekIcon.className = 'fas fa-eye';
+                        peekIcon.style.color = 'var(--text-muted)';
+                    } else {
+                        peekArea.style.display = 'block';
+                        peekIcon.className = 'fas fa-eye-slash';
+                        peekIcon.style.color = 'var(--primary)';
+                    }
+                }
+            }
+
+            revealDictationAnswer() {
+                const q = this.state.questions[this.state.currentIndex];
+                // No input needed
+                const userAns = "";
+
+                // Hide Peek Area and Button to avoid double answers
+                const peekArea = document.getElementById('peek-answer-area');
+                if (peekArea) peekArea.style.display = 'none';
+                const peekBtns = document.querySelectorAll('.peek-btn');
+                peekBtns.forEach(btn => btn.style.display = 'none');
+
+                document.getElementById('dictation-input-area').style.display = 'none';
+                document.getElementById('dictation-answer-area').classList.remove('hidden');
+
+                // Highlight Source Logic (Requirement 1)
+                let answerHtml = q.explanation || "暂无解析";
+                let pointsInfo = "未指定";
+
+                if (q.source) {
+                    pointsInfo = q.source;
+                }
+
+                // Disable Diff View since no input
+                document.getElementById('diff-view').style.display = 'none';
+
+                document.getElementById('dictation-answer-content').innerHTML = answerHtml;
+                document.getElementById('dictation-points-info').textContent = pointsInfo;
+            }
+
+            rateDictation(correct) {
+                const q = this.state.questions[this.state.currentIndex];
+                this.state.answers[q.id] = { correct };
+
+                if (correct) {
+                    this.state.score += 1;
+                    this.userStats.correctCount++;
+                }
+                this.userStats.totalAnswered++;
+                this.saveStats();
+
+                // Next or Finish
+                if (this.state.currentIndex < this.state.questions.length - 1) {
+                    this.state.currentIndex++;
+                    this.renderDictationQuestion();
+                } else {
+                    this.finishDictation();
+                }
+            }
+
+            finishDictation() {
+                clearInterval(this.state.dictationTimer);
+                const total = this.state.questions.length;
+                const correct = this.state.score;
+                const scorePercent = Math.round((correct / total) * 100);
+
+                document.getElementById('final-score').textContent = scorePercent;
+                document.getElementById('res-correct').textContent = correct;
+                document.getElementById('res-wrong').textContent = total - correct;
+                document.getElementById('final-comment').textContent = "默写挑战完成！";
+
+                // Generate Summary List
+                const summaryContainer = document.getElementById('dictation-summary-list');
+                if (summaryContainer) {
+                    summaryContainer.innerHTML = ''; // Clear previous
+
+                    this.state.questions.forEach((q, index) => {
+                        const isCorrect = this.state.answers[q.id]?.correct;
+                        const statusIcon = isCorrect
+                            ? '<i class="fas fa-check-circle" style="color:var(--success); font-size:1.2rem;"></i>'
+                            : '<i class="fas fa-times-circle" style="color:var(--error); font-size:1.2rem;"></i>';
+
+                        const div = document.createElement('div');
+                        div.className = 'summary-item';
+                        div.innerHTML = `
+                        <div class="summary-question">
+                            <div style="display:flex; align-items:center; gap:10px; flex:1;">
+                                <span style="color:var(--text-muted); font-weight:800; min-width:24px;">${index + 1}.</span>
+                                <span style="flex:1;">${q.question}</span>
+                                ${statusIcon}
+                            </div>
+                        </div>
+                    `;
+                        summaryContainer.appendChild(div);
+                    });
+                }
+
+                this.switchView('view-result');
+                if (scorePercent > 80) this.fireConfetti();
+            }
+
+            quitDictation() {
+                clearInterval(this.state.dictationTimer);
+                this.goHome();
+            }
+
+
+
+            unlockSystem() {
+                const pwd = document.getElementById('system-lock-input').value;
+                if (pwd === "daofa1") {
+                    const overlay = document.getElementById('system-lock-overlay');
+                    overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                    }, 500);
+                    sessionStorage.setItem('system_unlocked', 'true');
+                } else {
+                    document.getElementById('lock-error').textContent = "密码错误，请重试";
+                    document.getElementById('system-lock-input').value = '';
+                    document.getElementById('system-lock-input').focus();
+                }
+            }
+
+            init() {
+                // Check System Lock
+                if (sessionStorage.getItem('system_unlocked') === 'true') {
+                    document.getElementById('system-lock-overlay').style.display = 'none';
+                }
+
+                this.checkStreak();
+                this.renderHome();
+                this.setupSearch();
+                this.setupAdminSearch();
+
+                // Check theme
+                if (localStorage.getItem('theme') === 'dark') {
+                    document.body.setAttribute('data-theme', 'dark');
+                    document.getElementById('theme-icon').className = 'fas fa-sun';
+                }
+            }
+
+            toggleTheme() {
+                const isDark = document.body.getAttribute('data-theme') === 'dark';
+                if (isDark) {
+                    document.body.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    document.getElementById('theme-icon').className = 'fas fa-moon';
+                } else {
+                    document.body.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    document.getElementById('theme-icon').className = 'fas fa-sun';
+                }
+            }
+
+            // --- Seewo / Classroom Features ---
+
+            toggleSeewoMode() {
+                document.body.classList.toggle('seewo-mode');
+                const isSeewo = document.body.classList.contains('seewo-mode');
+                const icon = document.querySelector('#btn-seewo i');
+                if (isSeewo) {
+                    icon.className = 'fas fa-desktop'; // Change icon to indicate "Exit"
+                } else {
+                    icon.className = 'fas fa-tv';
+                }
+            }
+
+            resetAllData() {
+                if (confirm("确定要重置所有数据吗？这将清除所有学习记录和星级设置。（适合公用设备重置）")) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            }
+
+            // --- Cleaned up Handwriting Logic ---
+            // (Handwriting features removed per user request: "不需要学生上来写")
+
+            checkStreak() {
+                const today = new Date().toDateString();
+                if (this.userStats.lastStudyDate !== today) {
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+
+                    if (this.userStats.lastStudyDate === yesterday.toDateString()) {
+                        this.userStats.streak++;
+                    } else {
+                        this.userStats.streak = 1; // Reset or Start
+                    }
+                    // Save immediately to persist the streak update
+                    this.saveStats();
+                }
+            }
+
+            saveStats() {
+                this.userStats.lastStudyDate = new Date().toDateString();
+                localStorage.setItem('daofa_stats', JSON.stringify(this.userStats));
+                this.updateDashboardStats();
+            }
+
+            updateDashboardStats() {
+                document.getElementById('stat-total-answered').textContent = this.userStats.totalAnswered;
+                const rate = this.userStats.totalAnswered === 0 ? 0 : Math.round((this.userStats.correctCount / this.userStats.totalAnswered) * 100);
+                document.getElementById('stat-accuracy').textContent = rate + '%';
+                document.getElementById('stat-streak').textContent = this.userStats.streak;
+            }
+
+            renderHome() {
+                this.updateDashboardStats();
+                const grid = document.getElementById('unit-grid');
+                grid.innerHTML = '';
+
+                // Smart Recommendation Card (Simulated)
+                const smartCard = document.createElement('div');
+                smartCard.className = 'card';
+                smartCard.style.borderLeft = '6px solid var(--secondary)';
+                smartCard.innerHTML = `
+                <div class="card-title"><i class="fas fa-bolt" style="color:var(--secondary)"></i> 智能速练</div>
+                <div class="card-meta">基于班级错题推荐 15 道</div>
+            `;
+                smartCard.onclick = () => this.startQuiz('smart');
+                grid.appendChild(smartCard);
+
+                // All Units Card
+                const allCard = document.createElement('div');
+                allCard.className = 'card';
+                allCard.innerHTML = `
+                <div class="card-title">🔥 全真模拟</div>
+                <div class="card-meta">随机抽取 20 道综合题</div>
+            `;
+                allCard.onclick = () => this.startQuiz('all');
+                grid.appendChild(allCard);
+
+                // Special: Choice
+                const choiceCard = document.createElement('div');
+                choiceCard.className = 'card';
+                choiceCard.style.borderLeft = '6px solid var(--accent)';
+                choiceCard.innerHTML = `
+                <div class="card-title"><i class="fas fa-check-square" style="color:var(--accent)"></i> 专项：选择题</div>
+                <div class="card-meta">快速刷题 30 道</div>
+            `;
+                choiceCard.onclick = () => this.startQuiz('only_choice');
+                grid.appendChild(choiceCard);
+
+                // Special: Material
+                const materialCard = document.createElement('div');
+                materialCard.className = 'card';
+                materialCard.style.borderLeft = '6px solid var(--primary)';
+                materialCard.innerHTML = `
+                <div class="card-title"><i class="fas fa-file-alt" style="color:var(--primary)"></i> 专项：材料题</div>
+                <div class="card-meta">深度解析 30 道</div>
+            `;
+                materialCard.onclick = () => this.startQuiz('only_material');
+                grid.appendChild(materialCard);
+
+                // Special: Dictation
+                const dictationCard = document.createElement('div');
+                dictationCard.className = 'card';
+                dictationCard.style.borderLeft = '6px solid #f59e0b';
+                dictationCard.innerHTML = `
+                <div class="card-title"><i class="fas fa-pen-alt" style="color:#f59e0b"></i> 知识点默写</div>
+                <div class="card-meta">倒计时挑战 / 自选星级</div>
+            `;
+                dictationCard.onclick = () => this.startDictationConfig();
+                grid.appendChild(dictationCard);
+
+
+                // Unit Cards
+                this.data.forEach(unit => {
+                    const el = document.createElement('div');
+                    el.className = 'card';
+                    el.innerHTML = `
+                    <div class="card-title">${unit.title}</div>
+                    <div class="card-meta">
+                        <span class="card-badge">${unit.questions.length} 题</span>
+                        <span><i class="fas fa-play-circle"></i> 开始练习</span>
+                    </div>
+                `;
+                    el.onclick = () => this.startQuiz(unit.id);
+                    grid.appendChild(el);
+                });
+
+                // Ensure search area is hidden
+                document.getElementById('unit-grid-area').style.display = 'block';
+                document.getElementById('search-results-area').style.display = 'none';
+                this.switchView('view-home');
+            }
+
+            setupSearch() {
+                const input = document.getElementById('search-input');
+                let debounceTimer;
+
+                input.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase().trim();
+
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        this.performSearch(term);
+                    }, 300);
+                });
+            }
+
+            performSearch(term) {
+                const gridArea = document.getElementById('unit-grid-area');
+                const searchArea = document.getElementById('search-results-area');
+                const searchList = document.getElementById('search-list');
+                const btnPractice = document.getElementById('btn-practice-search');
+
+                if (!term) {
+                    gridArea.style.display = 'block';
+                    searchArea.style.display = 'none';
+                    searchArea.classList.add('hidden');
+                    return;
+                }
+
+                gridArea.style.display = 'none';
+                searchArea.style.display = 'block';
+                searchArea.classList.remove('hidden');
+                searchList.innerHTML = '';
+
+                // Find all matching questions
+                const matches = [];
+                this.data.forEach(unit => {
+                    unit.questions.forEach(q => {
+                        // Filter: only search practice questions (not points)
+                        if (q.type === 'point') return;
+
+                        const content = (q.question + (q.explanation || '')).toLowerCase();
+                        if (content.includes(term)) {
+                            matches.push({ ...q, unitTitle: unit.title });
+                        }
+                    });
+                });
+
+                this.state.searchResults = matches;
+                document.getElementById('search-count').textContent = `(找到 ${matches.length} 题)`;
+
+                if (matches.length === 0) {
+                    searchList.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:40px; font-size:1.2rem;">未找到相关题目，换个关键词试试？</div>';
+                    btnPractice.disabled = true;
+                    btnPractice.style.opacity = 0.5;
+                } else {
+                    btnPractice.disabled = false;
+                    btnPractice.style.opacity = 1;
+
+                    matches.slice(0, 50).forEach((q, index) => {
+                        const el = document.createElement('div');
+                        el.className = 'result-item';
+                        el.style.animationDelay = `${index * 0.03}s`;
+
+                        // Highlight logic (simple)
+                        const snippet = q.question.substring(0, 150) + '...';
+                        const highlighted = snippet.replace(new RegExp(term, 'gi'), match => `<span class="result-match">${match}</span>`);
+
+                        el.innerHTML = `
+                        <div class="result-meta">
+                            <span>${q.unitTitle}</span>
+                            <span class="card-badge">${q.type === 'choice' ? '选择题' : '材料题'}</span>
+                        </div>
+                        <div style="line-height:1.6; font-size:1.1rem;">${highlighted}</div>
+                    `;
+                        el.onclick = () => this.startQuiz('single_search', q.id);
+                        searchList.appendChild(el);
+                    });
+
+                    if (matches.length > 50) {
+                        const more = document.createElement('div');
+                        more.style.textAlign = 'center';
+                        more.style.color = 'var(--text-muted)';
+                        more.style.padding = '15px';
+                        more.textContent = `...还有 ${matches.length - 50} 个结果`;
+                        searchList.appendChild(more);
+                    }
+                }
+            }
+
+            clearSearch() {
+                document.getElementById('search-input').value = '';
+                this.performSearch('');
+            }
+
+            startQuiz(mode, param) {
+                this.state.score = 0;
+                this.state.currentIndex = 0;
+                this.state.answers = {};
+
+                let questions = [];
+                let title = "";
+
+                if (mode === 'all') {
+                    this.data.forEach(u => questions.push(...u.questions));
+                    questions = this.shuffle(questions).slice(0, 20);
+                    title = '全真模拟';
+                } else if (mode === 'smart') {
+                    this.data.forEach(u => questions.push(...u.questions));
+                    questions = this.shuffle(questions).slice(0, 15);
+                    title = '智能推荐';
+                } else if (mode === 'only_choice') {
+                    this.data.forEach(u => questions.push(...u.questions));
+                    questions = questions.filter(q => q.type === 'choice');
+                    questions = this.shuffle(questions).slice(0, 30);
+                    title = '专项：选择题';
+                } else if (mode === 'only_material') {
+                    this.data.forEach(u => questions.push(...u.questions));
+                    questions = questions.filter(q => q.type === 'material' && !q.question.includes('规则') && !q.question.includes('自由'));
+                    questions = this.shuffle(questions).slice(0, 30);
+                    title = '专项：材料题';
+                } else if (mode === 'search_results') {
+                    questions = [...this.state.searchResults];
+                    title = `专项练习 (${questions.length}题)`;
+                } else if (mode === 'single_search') {
+                    // Find specific question
+                    const targetQ = this.state.searchResults.find(q => q.id === param);
+                    if (targetQ) questions = [targetQ];
+                    title = "单题练习";
+                } else if (mode === 'wrong') {
+                    // Handled by retry
+                } else {
+                    const unit = this.data.find(u => u.id === mode);
+                    questions = [...unit.questions];
+                    title = unit.title;
+                }
+
+                this.state.questions = questions;
+                this.state.currentUnitId = title;
+                this.updateQuizUI();
+                this.switchView('view-quiz');
+            }
+
+            updateQuizUI() {
+                const q = this.state.questions[this.state.currentIndex];
+                const total = this.state.questions.length;
+                const progress = ((this.state.currentIndex + 1) / total) * 100;
+
+                document.getElementById('quiz-progress-text').textContent = `进度 ${this.state.currentIndex + 1}/${total}`;
+                document.getElementById('progress-fill').style.width = `${progress}%`;
+                document.getElementById('quiz-score-live').textContent = `得分: ${this.state.score}`;
+                document.getElementById('q-tag').textContent = this.state.currentUnitId;
+
+                // Render Question
+                document.getElementById('q-text').innerHTML = q.question;
+
+                // Reset Feedback
+                const feedback = document.getElementById('q-feedback');
+                feedback.style.display = 'none';
+                feedback.className = 'feedback-panel';
+                document.getElementById('material-section').classList.add('hidden');
+                document.getElementById('btn-show-ans').classList.add('hidden');
+
+                // Reset Material Timer
+                clearInterval(this.state.materialTimer);
+                this.state.materialCanReveal = false;
+                this.state.materialTimeLeft = 90;
+
+                // Render Options
+                const optsContainer = document.getElementById('q-options');
+                optsContainer.innerHTML = '';
+
+                const isLast = this.state.currentIndex === total - 1;
+                document.getElementById('btn-next').classList.toggle('hidden', isLast);
+                document.getElementById('btn-finish').classList.toggle('hidden', !isLast);
+                document.getElementById('btn-prev').disabled = this.state.currentIndex === 0;
+
+                if (q.type === 'choice') {
+                    const prevAns = this.state.answers[q.id];
+
+                    q.options.forEach(opt => {
+                        const btn = document.createElement('div');
+                        btn.className = 'option-item';
+
+                        // Extract letter
+                        let letter = "A";
+                        const match = opt.match(/^([A-D])\./);
+                        if (match) letter = match[1];
+
+                        btn.innerHTML = `
+                        <span style="font-weight:bold; color:var(--primary); width:40px; font-size:1.2em;">${letter}</span>
+                        <span>${opt.replace(/^[A-D]\./, '')}</span>
+                    `;
+
+                        if (prevAns) {
+                            btn.style.pointerEvents = 'none';
+                            if (letter === q.answer) btn.classList.add('correct');
+                            if (letter === prevAns.selected && !prevAns.correct) btn.classList.add('wrong');
+                        } else {
+                            btn.onclick = () => this.handleAnswer(q, letter, btn);
+                        }
+
+                        optsContainer.appendChild(btn);
+                    });
+
+                    if (prevAns) this.showFeedback(q, prevAns.correct);
+
+                } else if (q.type === 'point') {
+                    // Point Dictation in Review Mode
+                    document.getElementById('btn-show-ans').classList.remove('hidden');
+                    document.getElementById('material-content').innerHTML = q.explanation;
+
+                    // Clear and Hide Source Box
+                    document.getElementById('q-feedback').style.display = 'none';
+
+                    optsContainer.innerHTML = '<div style="color:var(--text-muted); padding:40px; text-align:center; font-size:1.3rem;">请默写/背诵该知识点，完成后点击下方“查看答案”自查。</div>';
+
+                } else {
+                    // Material Question
+                    const showAnsBtn = document.getElementById('btn-show-ans');
+                    showAnsBtn.classList.remove('hidden');
+                    showAnsBtn.disabled = true;
+                    showAnsBtn.innerHTML = `<i class="fas fa-eye"></i> 查看答案 (90s)`;
+
+                    document.getElementById('material-content').innerHTML = q.explanation;
+
+                    // Clear and Hide Source Box in Feedback Panel (will show when revealed)
+                    document.getElementById('q-feedback').style.display = 'none';
+
+                    optsContainer.innerHTML = '<div style="color:var(--text-muted); font-style:italic; padding:40px; text-align:center; font-size:1.3rem;">这是一道材料题，请思考后点击查看答案。</div>';
+
+                    // Start 90-second timer
+                    this.state.materialTimer = setInterval(() => {
+                        this.state.materialTimeLeft--;
+                        if (this.state.materialTimeLeft <= 0) {
+                            clearInterval(this.state.materialTimer);
+                            this.state.materialCanReveal = true;
+                            showAnsBtn.disabled = false;
+                            showAnsBtn.innerHTML = `<i class="fas fa-eye"></i> 查看答案`;
+                        } else {
+                            showAnsBtn.innerHTML = `<i class="fas fa-eye"></i> 查看答案 (${this.state.materialTimeLeft}s)`;
+                        }
+                    }, 1000);
+                }
+            }
+
+            handleAnswer(q, selected, btn) {
+                const correct = selected === q.answer;
+                this.state.answers[q.id] = { selected, correct };
+
+                // Update Stats
+                this.userStats.totalAnswered++;
+                if (correct) {
+                    this.state.score += 5;
+                    this.userStats.correctCount++;
+                }
+                this.saveStats();
+
+                // Update UI
+                const allBtns = document.querySelectorAll('.option-item');
+                allBtns.forEach(b => {
+                    b.style.pointerEvents = 'none';
+                    if (b.innerText.startsWith(q.answer)) b.classList.add('correct');
+                });
+
+                if (!correct) btn.classList.add('wrong');
+
+                this.showFeedback(q, correct);
+            }
+
+            showFeedback(q, correct) {
+                const panel = document.getElementById('q-feedback');
+                panel.style.display = 'block';
+                panel.style.background = ''; // Clear inline styles
+                panel.style.borderLeftColor = '';
+                panel.className = 'feedback-panel'; // Reset classes
+                panel.classList.add(correct ? 'correct' : 'wrong');
+
+                document.getElementById('q-explanation').style.display = 'block'; // Ensure explanation is visible
+                document.getElementById('q-explanation').innerHTML = q.explanation || "暂无详细解析";
+
+                // Show Source
+                const sourceBox = document.getElementById('q-source-box');
+                if (q.source) {
+                    sourceBox.classList.remove('hidden');
+                    sourceBox.style.display = 'block';
+                    // Enhance formatting
+                    let sourceText = q.source.replace(/｜/g, "<br>")
+                        .replace(/\+/g, ' <br><i class="fas fa-plus-circle" style="font-size:0.8em; color:var(--primary); margin:0 5px;"></i> ');
+                    document.getElementById('q-source-content').innerHTML = sourceText;
+                } else {
+                    sourceBox.classList.add('hidden');
+                    sourceBox.style.display = 'none';
+                }
+            }
+
+            revealMaterial() {
+                // Check if time limit has passed
+                if (!this.state.materialCanReveal) {
+                    return; // Do nothing if time limit not reached
+                }
+
+                document.getElementById('material-section').classList.remove('hidden');
+
+                // Show Source Logic for Material
+                const q = this.state.questions[this.state.currentIndex];
+
+                // Reuse the feedback panel structure but customize for material
+                const panel = document.getElementById('q-feedback');
+                panel.style.display = 'block';
+                panel.style.background = ''; // Clear inline styles
+                panel.style.borderLeftColor = '';
+                panel.className = 'feedback-panel material'; // Use new class
+
+                // Hide standard explanation part since it is in material-content
+                document.getElementById('q-explanation').style.display = 'none';
+
+                // Show Source Box Only
+                const sourceBox = document.getElementById('q-source-box');
+                if (q.source) {
+                    sourceBox.classList.remove('hidden');
+                    sourceBox.style.display = 'block';
+                    // Enhance formatting for multi-part sources if present
+                    let sourceText = q.source.replace(/｜/g, "<br>")
+                        .replace(/\+/g, ' <br><i class="fas fa-plus-circle" style="font-size:0.8em; color:var(--primary); margin:0 5px;"></i> ');
+                    document.getElementById('q-source-content').innerHTML = sourceText;
+                } else {
+                    sourceBox.classList.add('hidden');
+                    sourceBox.style.display = 'none';
+                    // If no source, hide the whole panel if explanation is hidden
+                    panel.style.display = 'none';
+                }
+            }
+
+            nextQuestion() {
+                // Reset Feedback Panel Visibility for next question
+                document.getElementById('q-explanation').style.display = 'block';
+
+                this.state.currentIndex++;
+                this.updateQuizUI();
+            }
+
+            prevQuestion() {
+                if (this.state.currentIndex > 0) {
+                    this.state.currentIndex--;
+                    this.updateQuizUI();
+                }
+            }
+
+            finishQuiz() {
+                // Calc Score percentage
+                const total = this.state.questions.length;
+                const correct = Object.values(this.state.answers).filter(a => a.correct).length;
+                const score = total === 0 ? 0 : Math.round((correct / total) * 100);
+
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('res-correct').textContent = correct;
+                document.getElementById('res-wrong').textContent = total - correct;
+
+                let comment = "继续加油！";
+                if (score >= 90) comment = "太神了！学霸附体！";
+                else if (score >= 80) comment = "很棒！基础扎实！";
+                else if (score >= 60) comment = "及格了，再接再厉！";
+
+                document.getElementById('final-comment').textContent = comment;
+
+                this.switchView('view-result');
+
+                if (score > 80) this.fireConfetti();
+            }
+
+            reviewWrong() {
+                const wrongIds = Object.keys(this.state.answers).filter(id => !this.state.answers[id].correct);
+                if (wrongIds.length === 0) {
+                    alert("没有错题！你太强了！");
+                    return;
+                }
+
+                const wrongQs = this.state.questions.filter(q => wrongIds.includes(q.id));
+                this.state.questions = wrongQs;
+                this.state.currentIndex = 0;
+                this.state.score = 0;
+                this.state.answers = {};
+                this.state.currentUnitId = "错题攻克";
+
+                this.updateQuizUI();
+                this.switchView('view-quiz');
+            }
+
+            goHome() {
+                this.switchView('view-home');
+            }
+
+            switchView(id) {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                window.scrollTo(0, 0);
+            }
+
+            shuffle(array) {
+                return array.sort(() => Math.random() - 0.5);
+            }
+
+            fireConfetti() {
+                // Simple Confetti Implementation
+                const canvas = document.getElementById('confetti-canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                const particles = [];
+                const colors = ['#6366f1', '#ec4899', '#10b981', '#f59e0b'];
+
+                for (let i = 0; i < 100; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height - canvas.height,
+                        vx: Math.random() * 4 - 2,
+                        vy: Math.random() * 4 + 2,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        size: Math.random() * 8 + 4
+                    });
+                }
+
+                let animationId;
+                const animate = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    let active = false;
+                    particles.forEach(p => {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        if (p.y < canvas.height) active = true;
+
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+
+                    if (active) requestAnimationFrame(animate);
+                };
+                animate();
+            }
+        }
+
+        const app = new App(DATA);
+    </script>
+</body>
+
+</html>
